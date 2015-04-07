@@ -31,6 +31,9 @@ namespace lmdb {
 
 namespace lmdb {
   class error;
+  class logic_error;
+  class fatal_error;
+  class runtime_error;
   class key_exist_error;
   class not_found_error;
 }
@@ -82,19 +85,43 @@ public:
 };
 
 /**
- * Exception class for `MDB_KEYEXIST` errors.
+ * Base class for logic error conditions.
  */
-class lmdb::key_exist_error final : public lmdb::error {
+class lmdb::logic_error : public lmdb::error {
 public:
   using error::error;
 };
 
 /**
- * Exception class for `MDB_NOTFOUND` errors.
+ * Base class for fatal error conditions.
  */
-class lmdb::not_found_error final : public lmdb::error {
+class lmdb::fatal_error : public lmdb::error {
 public:
   using error::error;
+};
+
+/**
+ * Base class for runtime error conditions.
+ */
+class lmdb::runtime_error : public lmdb::error {
+public:
+  using error::error;
+};
+
+/**
+ * Exception class for `MDB_KEYEXIST` errors.
+ */
+class lmdb::key_exist_error final : public lmdb::runtime_error {
+public:
+  using runtime_error::runtime_error;
+};
+
+/**
+ * Exception class for `MDB_NOTFOUND` errors.
+ */
+class lmdb::not_found_error final : public lmdb::runtime_error {
+public:
+  using runtime_error::runtime_error;
 };
 
 inline void
