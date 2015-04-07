@@ -302,6 +302,7 @@ lmdb::txn_renew(MDB_txn* const txn) {
 namespace lmdb {
   static inline void dbi_open(
     MDB_txn* txn, const char* name, unsigned int flags, MDB_dbi* dbi);
+  static inline void dbi_close(MDB_env* env, MDB_dbi dbi);
   // TODO: the rest of the mdb_dbi_*() interface.
 }
 
@@ -318,6 +319,16 @@ lmdb::dbi_open(MDB_txn* const txn,
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_dbi_open", rc);
   }
+}
+
+/**
+ * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga52dd98d0c542378370cd6b712ff961b5
+ */
+static inline void
+lmdb::dbi_close(MDB_env* const env,
+                const MDB_dbi dbi) {
+  ::mdb_dbi_close(env, dbi);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
