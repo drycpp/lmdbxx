@@ -222,6 +222,7 @@ lmdb::env_sync(MDB_env* env,
 namespace lmdb {
   static inline void txn_begin(
     MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
+  static inline MDB_env* txn_env(MDB_txn* const txn);
   static inline void txn_commit(MDB_txn* txn);
   static inline void txn_abort(MDB_txn* txn);
   static inline void txn_reset(MDB_txn* txn);
@@ -241,6 +242,15 @@ lmdb::txn_begin(MDB_env* const env,
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_txn_begin", rc);
   }
+}
+
+/**
+ * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaeb17735b8aaa2938a78a45cab85c06a0
+ */
+static inline MDB_env*
+lmdb::txn_env(MDB_txn* const txn) {
+  return ::mdb_txn_env(txn);
 }
 
 /**
@@ -283,6 +293,20 @@ lmdb::txn_renew(MDB_txn* const txn) {
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_txn_renew", rc);
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/* Procedural Interface: Databases */
+
+namespace lmdb {
+  // TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/* Procedural Interface: Cursors */
+
+namespace lmdb {
+  // TODO
 }
 
 ////////////////////////////////////////////////////////////////////////////////
