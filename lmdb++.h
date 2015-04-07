@@ -35,6 +35,11 @@ protected:
 
 public:
   /**
+   * Throws an error based on the given LMDB return code.
+   */
+  [[noreturn]] static inline void raise(const char* origin, int rc);
+
+  /**
    * Constructor.
    */
   error(const char* const origin,
@@ -82,6 +87,16 @@ class lmdb::not_found_error final : public lmdb::error {
 public:
   using error::error;
 };
+
+void
+lmdb::error::raise(const char* const origin,
+                   const int rc) {
+  switch (rc) {
+    case MDB_KEYEXIST: throw key_exist_error{origin, rc};
+    case MDB_NOTFOUND: throw not_found_error{origin, rc};
+    default: throw error{origin, rc};
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
