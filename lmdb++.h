@@ -103,6 +103,7 @@ lmdb::error::raise(const char* const origin,
 
 namespace lmdb {
   static inline void env_create(MDB_env** env);
+  static inline void env_close(MDB_env* env);
 }
 
 /**
@@ -114,6 +115,14 @@ lmdb::env_create(MDB_env** env) {
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_create", rc);
   }
+}
+
+/**
+ * @note never throws an exception
+ */
+static inline void
+lmdb::env_close(MDB_env* env) {
+  ::mdb_env_close(env);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
