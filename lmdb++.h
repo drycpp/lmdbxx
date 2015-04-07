@@ -107,10 +107,9 @@ namespace lmdb {
   static inline void env_open(MDB_env* env,
     const char* path, unsigned int flags, mdb_mode_t mode);
   static inline void env_close(MDB_env* env);
-  static inline void env_set_flags(MDB_env* env,
-    unsigned int flags, bool onoff);
-  static inline void env_set_map_size(MDB_env* env,
-    std::size_t size);
+  static inline void env_set_flags(MDB_env* env, unsigned int flags, bool onoff);
+  static inline void env_set_map_size(MDB_env* env, std::size_t size);
+  static inline void env_set_max_readers(MDB_env* env, unsigned int count);
 }
 
 /**
@@ -168,6 +167,18 @@ lmdb::env_set_map_size(MDB_env* env,
   const int rc = ::mdb_env_set_mapsize(env, size);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_mapsize", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ */
+static inline void
+lmdb::env_set_max_readers(MDB_env* env,
+                          const unsigned int count) {
+  const int rc = ::mdb_env_set_maxreaders(env, count);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_set_maxreaders", rc);
   }
 }
 
