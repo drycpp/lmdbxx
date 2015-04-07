@@ -106,6 +106,8 @@ namespace lmdb {
   static inline void env_open(MDB_env* env,
     const char* path, unsigned int flags, mdb_mode_t mode);
   static inline void env_close(MDB_env* env);
+  static inline void env_set_flags(MDB_env* env,
+    unsigned int flags, const bool onoff);
 }
 
 /**
@@ -139,6 +141,19 @@ lmdb::env_open(MDB_env* env,
 static inline void
 lmdb::env_close(MDB_env* env) {
   ::mdb_env_close(env);
+}
+
+/**
+ * @throws lmdb::error on failure
+ */
+static inline void
+lmdb::env_set_flags(MDB_env* env,
+                    const unsigned int flags,
+                    const bool onoff = true) {
+  const int rc = ::mdb_env_set_flags(env, flags, onoff ? 1 : 0);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_set_flags", rc);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
