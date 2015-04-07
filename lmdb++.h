@@ -5,6 +5,9 @@
 
 /**
  * <lmdb++.h> - C++11 wrapper for LMDB.
+ *
+ * @author Arto Bendiken <arto@bendiken.net>
+ * @see https://sourceforge.net/projects/lmdbxx/
  */
 
 #ifndef __cplusplus
@@ -16,6 +19,7 @@
 #include <lmdb.h>    /* for MDB_*, mdb_*() */
 
 #include <cstddef>   /* for std::size_t */
+#include <cstdio>    /* for std::snprintf() */
 #include <stdexcept> /* for std::runtime_error */
 
 namespace lmdb {
@@ -104,7 +108,7 @@ lmdb::error::raise(const char* const origin,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/* Procedural Interface */
+/* Procedural Interface: Environment */
 
 namespace lmdb {
   static inline void env_create(MDB_env** env);
@@ -209,6 +213,29 @@ lmdb::env_sync(MDB_env* env,
   const int rc = ::mdb_env_sync(env, force);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_sync", rc);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/* Procedural Interface: Transactions */
+
+namespace lmdb {
+  static inline void txn_begin(
+    MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gad7ea55da06b77513609efebd44b26920
+ */
+static inline void
+lmdb::txn_begin(MDB_env* const env,
+                MDB_txn* const parent,
+                const unsigned int flags,
+                MDB_txn** txn) {
+  const int rc = ::mdb_txn_begin(env, parent, flags, txn);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_txn_begin", rc);
   }
 }
 
