@@ -108,19 +108,42 @@ lmdb::error::raise(const char* const origin,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/* Procedural Interface: Metadata */
+
+namespace lmdb {
+  // TODO: mdb_version()
+  // TODO: mdb_strerror()
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /* Procedural Interface: Environment */
 
 namespace lmdb {
   static inline void env_create(MDB_env** env);
   static inline void env_open(MDB_env* env,
     const char* path, unsigned int flags, mode mode);
+  // TODO: mdb_env_copy()
+  // TODO: mdb_env_copyfd()
+  // TODO: mdb_env_copy2()
+  // TODO: mdb_env_copyfd2()
+  // TODO: mdb_env_stat()
+  // TODO: mdb_env_info()
+  static inline void env_sync(MDB_env* env, bool force);
   static inline void env_close(MDB_env* env);
   static inline void env_set_flags(MDB_env* env, unsigned int flags, bool onoff);
+  // TODO: mdb_env_get_flags()
+  // TODO: mdb_env_get_path()
+  // TODO: mdb_env_get_fd()
   static inline void env_set_map_size(MDB_env* env, std::size_t size);
   static inline void env_set_max_readers(MDB_env* env, unsigned int count);
+  // TODO: mdb_env_get_maxreaders()
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
-  static inline void env_sync(MDB_env* env, bool force);
-  // TODO: the rest of the mdb_env_*() interface.
+  // TODO: mdb_env_get_maxkeysize()
+  // TODO: mdb_env_set_userctx()
+  // TODO: mdb_env_get_userctx()
+  // TODO: mdb_env_set_assert()
+  // TODO: mdb_reader_list()
+  // TODO: mdb_reader_check()
 }
 
 /**
@@ -145,6 +168,18 @@ lmdb::env_open(MDB_env* env,
   const int rc = ::mdb_env_open(env, path, flags, mode);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_open", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ */
+static inline void
+lmdb::env_sync(MDB_env* env,
+               const bool force = true) {
+  const int rc = ::mdb_env_sync(env, force);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_sync", rc);
   }
 }
 
@@ -202,18 +237,6 @@ lmdb::env_set_max_dbs(MDB_env* env,
   const int rc = ::mdb_env_set_maxdbs(env, count);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_maxdbs", rc);
-  }
-}
-
-/**
- * @throws lmdb::error on failure
- */
-static inline void
-lmdb::env_sync(MDB_env* env,
-               const bool force = true) {
-  const int rc = ::mdb_env_sync(env, force);
-  if (rc != MDB_SUCCESS) {
-    error::raise("mdb_env_sync", rc);
   }
 }
 
@@ -302,9 +325,19 @@ lmdb::txn_renew(MDB_txn* const txn) {
 namespace lmdb {
   static inline void dbi_open(
     MDB_txn* txn, const char* name, unsigned int flags, MDB_dbi* dbi);
-  static inline void dbi_close(MDB_env* env, MDB_dbi dbi);
+  // TODO: mdb_stat()
   static inline void dbi_flags(MDB_txn* txn, MDB_dbi dbi, unsigned int* flags);
-  // TODO: the rest of the mdb_dbi_*() interface.
+  static inline void dbi_close(MDB_env* env, MDB_dbi dbi);
+  // TODO: mdb_drop()
+  // TODO: mdb_set_compare()
+  // TODO: mdb_set_dupsort()
+  // TODO: mdb_set_relfunc()
+  // TODO: mdb_set_relctx()
+  // TODO: mdb_get()
+  // TODO: mdb_put()
+  // TODO: mdb_del()
+  // TODO: mdb_cmp()
+  // TODO: mdb_dcmp()
 }
 
 /**
@@ -323,16 +356,6 @@ lmdb::dbi_open(MDB_txn* const txn,
 }
 
 /**
- * @note never throws an exception
- * @see http://symas.com/mdb/doc/group__mdb.html#ga52dd98d0c542378370cd6b712ff961b5
- */
-static inline void
-lmdb::dbi_close(MDB_env* const env,
-                const MDB_dbi dbi) {
-  ::mdb_dbi_close(env, dbi);
-}
-
-/**
  * @throws lmdb::error on failure
  * @see http://symas.com/mdb/doc/group__mdb.html#ga95ba4cb721035478a8705e57b91ae4d4
  */
@@ -346,11 +369,29 @@ lmdb::dbi_flags(MDB_txn* const txn,
   }
 }
 
+/**
+ * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga52dd98d0c542378370cd6b712ff961b5
+ */
+static inline void
+lmdb::dbi_close(MDB_env* const env,
+                const MDB_dbi dbi) {
+  ::mdb_dbi_close(env, dbi);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 /* Procedural Interface: Cursors */
 
 namespace lmdb {
-  // TODO: the rest of the mdb_cursor_*() interface.
+  // TODO: mdb_cursor_open()
+  // TODO: mdb_cursor_close()
+  // TODO: mdb_cursor_renew()
+  // TODO: mdb_cursor_txn()
+  // TODO: mdb_cursor_dbi()
+  // TODO: mdb_cursor_get()
+  // TODO: mdb_cursor_put()
+  // TODO: mdb_cursor_del()
+  // TODO: mdb_cursor_count()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
