@@ -223,6 +223,7 @@ namespace lmdb {
   static inline void txn_begin(
     MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
   static inline void txn_commit(MDB_txn* txn);
+  static inline void txn_abort(MDB_txn* txn);
 }
 
 /**
@@ -250,6 +251,15 @@ lmdb::txn_commit(MDB_txn* const txn) {
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_txn_commit", rc);
   }
+}
+
+/**
+ * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga73a5938ae4c3239ee11efa07eb22b882
+ */
+static inline void
+lmdb::txn_abort(MDB_txn* const txn) {
+  ::mdb_txn_abort(txn);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
