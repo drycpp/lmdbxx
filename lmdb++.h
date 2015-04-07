@@ -222,6 +222,7 @@ lmdb::env_sync(MDB_env* env,
 namespace lmdb {
   static inline void txn_begin(
     MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
+  static inline void txn_commit(MDB_txn* txn);
 }
 
 /**
@@ -236,6 +237,18 @@ lmdb::txn_begin(MDB_env* const env,
   const int rc = ::mdb_txn_begin(env, parent, flags, txn);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_txn_begin", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga846fbd6f46105617ac9f4d76476f6597
+ */
+static inline void
+lmdb::txn_commit(MDB_txn* const txn) {
+  const int rc = ::mdb_txn_commit(txn);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_txn_commit", rc);
   }
 }
 
