@@ -303,6 +303,7 @@ namespace lmdb {
   static inline void dbi_open(
     MDB_txn* txn, const char* name, unsigned int flags, MDB_dbi* dbi);
   static inline void dbi_close(MDB_env* env, MDB_dbi dbi);
+  static inline void dbi_flags(MDB_txn* txn, MDB_dbi dbi, unsigned int* flags);
   // TODO: the rest of the mdb_dbi_*() interface.
 }
 
@@ -329,6 +330,20 @@ static inline void
 lmdb::dbi_close(MDB_env* const env,
                 const MDB_dbi dbi) {
   ::mdb_dbi_close(env, dbi);
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga95ba4cb721035478a8705e57b91ae4d4
+ */
+static inline void
+lmdb::dbi_flags(MDB_txn* const txn,
+                const MDB_dbi dbi,
+                unsigned int* const flags) {
+  const int rc = ::mdb_dbi_flags(txn, dbi, flags);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_dbi_flags", rc);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
