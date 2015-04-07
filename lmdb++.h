@@ -224,6 +224,7 @@ namespace lmdb {
     MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
   static inline void txn_commit(MDB_txn* txn);
   static inline void txn_abort(MDB_txn* txn);
+  static inline void txn_reset(MDB_txn* txn);
 }
 
 /**
@@ -260,6 +261,15 @@ lmdb::txn_commit(MDB_txn* const txn) {
 static inline void
 lmdb::txn_abort(MDB_txn* const txn) {
   ::mdb_txn_abort(txn);
+}
+
+/**
+ * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga02b06706f8a66249769503c4e88c56cd
+ */
+static inline void
+lmdb::txn_reset(MDB_txn* const txn) {
+  ::mdb_txn_reset(txn);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
