@@ -120,6 +120,7 @@ namespace lmdb {
   static inline void env_set_max_readers(MDB_env* env, unsigned int count);
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
   static inline void env_sync(MDB_env* env, bool force);
+  // TODO: the rest of the mdb_env_*() interface.
 }
 
 /**
@@ -299,14 +300,31 @@ lmdb::txn_renew(MDB_txn* const txn) {
 /* Procedural Interface: Databases */
 
 namespace lmdb {
-  // TODO
+  static inline void dbi_open(
+    MDB_txn* txn, const char* name, unsigned int flags, MDB_dbi* dbi);
+  // TODO: the rest of the mdb_dbi_*() interface.
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gac08cad5b096925642ca359a6d6f0562a
+ */
+static inline void
+lmdb::dbi_open(MDB_txn* const txn,
+               const char* const name,
+               const unsigned int flags,
+               MDB_dbi* const dbi) {
+  const int rc = ::mdb_dbi_open(txn, name, flags, dbi);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_dbi_open", rc);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /* Procedural Interface: Cursors */
 
 namespace lmdb {
-  // TODO
+  // TODO: the rest of the mdb_cursor_*() interface.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
