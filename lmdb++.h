@@ -4,7 +4,7 @@
 #define LMDBXX_H
 
 /**
- * <lmdb++.h>
+ * <lmdb++.h> - C++11 wrapper for LMDB.
  */
 
 #ifndef __cplusplus
@@ -15,6 +15,7 @@
 
 #include <lmdb.h>    /* for MDB_*, mdb_*() */
 
+#include <cstddef>   /* for std::size_t */
 #include <stdexcept> /* for std::runtime_error */
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +108,9 @@ namespace lmdb {
     const char* path, unsigned int flags, mdb_mode_t mode);
   static inline void env_close(MDB_env* env);
   static inline void env_set_flags(MDB_env* env,
-    unsigned int flags, const bool onoff);
+    unsigned int flags, bool onoff);
+  static inline void env_set_map_size(MDB_env* env,
+    std::size_t size);
 }
 
 /**
@@ -153,6 +156,18 @@ lmdb::env_set_flags(MDB_env* env,
   const int rc = ::mdb_env_set_flags(env, flags, onoff ? 1 : 0);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_flags", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ */
+static inline void
+lmdb::env_set_map_size(MDB_env* env,
+                       const std::size_t size) {
+  const int rc = ::mdb_env_set_mapsize(env, size);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_set_mapsize", rc);
   }
 }
 
