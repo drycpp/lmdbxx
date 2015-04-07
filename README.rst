@@ -38,7 +38,7 @@ LMDB error conditions:
   implement another strategy, such as retrying the operation after first
   letting most of the call stack unwind in order to free up scarce
   resources.
-* **Runtime errors**, thrown as ``lmdb::runtime_error``. Errors of this
+* **Runtime errors**, represented by ``lmdb::runtime_error``. Errors of this
   class are thrown as a matter of course to indicate various exceptional
   conditions. These conditions are generally recoverable, and robust
   programs will take care to correctly handle them.
