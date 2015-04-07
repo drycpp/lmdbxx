@@ -103,6 +103,8 @@ lmdb::error::raise(const char* const origin,
 
 namespace lmdb {
   static inline void env_create(MDB_env** env);
+  static inline void env_open(MDB_env* env,
+    const char* path, unsigned int flags, mdb_mode_t mode);
   static inline void env_close(MDB_env* env);
 }
 
@@ -114,6 +116,20 @@ lmdb::env_create(MDB_env** env) {
   const int rc = ::mdb_env_create(env);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_create", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ */
+static inline void
+lmdb::env_open(MDB_env* env,
+               const char* const path,
+               const unsigned int flags,
+               const mdb_mode_t mode) {
+  const int rc = ::mdb_env_open(env, path, flags, mode);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_open", rc);
   }
 }
 
