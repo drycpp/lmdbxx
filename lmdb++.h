@@ -88,13 +88,31 @@ public:
   using error::error;
 };
 
-void
+inline void
 lmdb::error::raise(const char* const origin,
                    const int rc) {
   switch (rc) {
     case MDB_KEYEXIST: throw key_exist_error{origin, rc};
     case MDB_NOTFOUND: throw not_found_error{origin, rc};
     default: throw error{origin, rc};
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/* Procedural Interface */
+
+namespace lmdb {
+  static inline void env_create(MDB_env** env);
+}
+
+/**
+ * @throws lmdb::error on failure
+ */
+static inline void
+lmdb::env_create(MDB_env** env) {
+  const int rc = ::mdb_env_create(env);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_create", rc);
   }
 }
 
