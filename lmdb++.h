@@ -225,6 +225,7 @@ namespace lmdb {
   static inline void txn_commit(MDB_txn* txn);
   static inline void txn_abort(MDB_txn* txn);
   static inline void txn_reset(MDB_txn* txn);
+  static inline void txn_renew(MDB_txn* txn);
 }
 
 /**
@@ -270,6 +271,18 @@ lmdb::txn_abort(MDB_txn* const txn) {
 static inline void
 lmdb::txn_reset(MDB_txn* const txn) {
   ::mdb_txn_reset(txn);
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga6c6f917959517ede1c504cf7c720ce6d
+ */
+static inline void
+lmdb::txn_renew(MDB_txn* const txn) {
+  const int rc = ::mdb_txn_renew(txn);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_txn_renew", rc);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
