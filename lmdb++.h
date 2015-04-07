@@ -17,17 +17,19 @@
 
 #include <stdexcept> /* for std::runtime_error */
 
+////////////////////////////////////////////////////////////////////////////////
+/* Error Handling */
+
 namespace lmdb {
   class error;
+  class key_exist_error;
+  class not_found_error;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/* lmdb::error */
-
 /**
- * LMDB exception class.
+ * Base class for LMDB exception conditions.
  */
-class lmdb::error final : public std::runtime_error {
+class lmdb::error : public std::runtime_error {
 protected:
   const int _code;
 
@@ -59,9 +61,26 @@ public:
    */
   virtual const char* what() const noexcept {
     static thread_local char buffer[1024];
-    std::snprintf(buffer, sizeof(buffer), "%s: %s", origin(), ::mdb_strerror(code()));
+    std::snprintf(buffer, sizeof(buffer),
+      "%s: %s", origin(), ::mdb_strerror(code()));
     return buffer;
   }
+};
+
+/**
+ * Exception class for `MDB_KEYEXIST` errors.
+ */
+class lmdb::key_exist_error final : public lmdb::error {
+public:
+  using error::error;
+};
+
+/**
+ * Exception class for `MDB_NOTFOUND` errors.
+ */
+class lmdb::not_found_error final : public lmdb::error {
+public:
+  using error::error;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
