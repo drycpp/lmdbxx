@@ -462,10 +462,7 @@ public:
    * Destructor.
    */
   ~env() noexcept {
-    if (_handle) {
-      // TODO
-      _handle = nullptr;
-    }
+    try { close(); } catch (...) {}
   }
 
   /**
@@ -473,6 +470,19 @@ public:
    */
   MDB_env* handle() const noexcept {
     return _handle;
+  }
+
+  /**
+   * Closes this environment, releasing the memory map.
+   *
+   * @note this method is idempotent
+   * @note never throws an exception
+   */
+  void close() noexcept {
+    if (handle()) {
+      lmdb::env_close(handle());
+      _handle = nullptr;
+    }
   }
 };
 
