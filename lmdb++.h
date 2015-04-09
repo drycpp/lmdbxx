@@ -455,10 +455,15 @@ protected:
   MDB_env* _handle{nullptr};
 
 public:
+  static constexpr unsigned int default_flags = 0;
+  static constexpr mode default_mode = 0644; /* -rw-r--r-- */
+
   /**
    * Creates a new LMDB environment.
+   *
+   * @throws lmdb::error on failure
    */
-  static env create(const unsigned int flags = 0) {
+  static env create(const unsigned int flags = default_flags) {
     MDB_env* handle{nullptr};
     lmdb::env_create(&handle);
 #if 1
@@ -500,13 +505,24 @@ public:
    * Closes this environment, releasing the memory map.
    *
    * @note this method is idempotent
-   * @note never throws an exception
    */
   void close() noexcept {
     if (handle()) {
       lmdb::env_close(handle());
       _handle = nullptr;
     }
+  }
+
+  /**
+   * Opens this environment.
+   *
+   * @throws lmdb::error on failure
+   */
+  env& open(const char* const path,
+            const unsigned int flags = default_flags,
+            const mode mode = default_mode) {
+    lmdb::env_open(handle(), path, flags, mode);
+    return *this;
   }
 };
 
@@ -527,6 +543,8 @@ protected:
   MDB_txn* _handle{nullptr};
 
 public:
+  static constexpr unsigned int default_flags = 0;
+
   /**
    * Constructor.
    */
@@ -568,13 +586,15 @@ protected:
   const MDB_dbi _handle;
 
 public:
+  static constexpr unsigned int default_flags = 0;
+
   /**
    * Opens a database handle.
    */
   static dbi
   open(MDB_txn* const txn,
        const char* const name = nullptr,
-       const unsigned int flags = 0) {
+       const unsigned int flags = default_flags) {
     MDB_dbi handle;
     lmdb::dbi_open(txn, name, flags, &handle);
     return dbi{handle};
