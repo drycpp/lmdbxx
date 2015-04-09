@@ -352,7 +352,7 @@ lmdb::txn_renew(MDB_txn* const txn) {
 namespace lmdb {
   static inline void dbi_open(
     MDB_txn* txn, const char* name, unsigned int flags, MDB_dbi* dbi);
-  // TODO: mdb_stat()
+  static inline void dbi_stat(MDB_txn* txn, MDB_dbi dbi, MDB_stat* stat);
   static inline void dbi_flags(MDB_txn* txn, MDB_dbi dbi, unsigned int* flags);
   static inline void dbi_close(MDB_env* env, MDB_dbi dbi);
   // TODO: mdb_drop()
@@ -379,6 +379,20 @@ lmdb::dbi_open(MDB_txn* const txn,
   const int rc = ::mdb_dbi_open(txn, name, flags, dbi);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_dbi_open", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gae6c1069febe94299769dbdd032fadef6
+ */
+static inline void
+lmdb::dbi_stat(MDB_txn* const txn,
+               const MDB_dbi dbi,
+               MDB_stat* const result) {
+  const int rc = ::mdb_stat(txn, dbi, result);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_stat", rc);
   }
 }
 
