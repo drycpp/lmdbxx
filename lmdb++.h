@@ -438,6 +438,44 @@ namespace lmdb {
 ////////////////////////////////////////////////////////////////////////////////
 /* Resource Interface: Environment */
 
+namespace lmdb {
+  class env;
+}
+
+/**
+ * Resource class for `MDB_env*` handles.
+ *
+ * @see http://symas.com/mdb/doc/group__internal.html#structMDB__env
+ */
+class lmdb::env {
+protected:
+  MDB_env* _handle{nullptr};
+
+public:
+  /**
+   * Constructor.
+   */
+  env(MDB_env* const handle) noexcept
+    : _handle{handle} {}
+
+  /**
+   * Destructor.
+   */
+  ~env() noexcept {
+    if (_handle) {
+      // TODO
+      _handle = nullptr;
+    }
+  }
+
+  /**
+   * Returns the underlying `MDB_env*` handle.
+   */
+  MDB_env* handle() const noexcept {
+    return _handle;
+  }
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 /* Resource Interface: Transactions */
 
