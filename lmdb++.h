@@ -485,6 +485,18 @@ public:
   MDB_dbi handle() const noexcept {
     return _handle;
   }
+
+  /**
+   * Returns statistics for this database.
+   *
+   * @param txn a transaction handle
+   * @throws lmdb::error on failure
+   */
+  MDB_stat stat(MDB_txn* const txn) const {
+    MDB_stat result;
+    lmdb::dbi_stat(txn, handle(), &result);
+    return result;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
