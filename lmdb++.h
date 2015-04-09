@@ -436,6 +436,50 @@ namespace lmdb {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/* Resource Interface: Environment */
+
+////////////////////////////////////////////////////////////////////////////////
+/* Resource Interface: Transactions */
+
+namespace lmdb {
+  class txn;
+}
+
+/**
+ * Resource class for `MDB_txn*` handles.
+ *
+ * @see http://symas.com/mdb/doc/group__internal.html#structMDB__txn
+ */
+class lmdb::txn {
+protected:
+  MDB_txn* _handle{nullptr};
+
+public:
+  /**
+   * Constructor.
+   */
+  txn(MDB_txn* const handle) noexcept
+    : _handle{handle} {}
+
+  /**
+   * Destructor.
+   */
+  ~txn() noexcept {
+    if (_handle) {
+      // TODO
+      _handle = nullptr;
+    }
+  }
+
+  /**
+   * Returns the underlying `MDB_txn*` handle.
+   */
+  MDB_txn* handle() const noexcept {
+    return _handle;
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////
 /* Resource Interface: Databases */
 
 namespace lmdb {
@@ -467,7 +511,7 @@ public:
   /**
    * Constructor.
    */
-  dbi(MDB_dbi handle) noexcept
+  dbi(const MDB_dbi handle) noexcept
     : _handle{handle} {}
 
   /**
