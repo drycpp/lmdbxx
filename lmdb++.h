@@ -18,6 +18,9 @@
 
 #include <lmdb.h>    /* for MDB_*, mdb_*() */
 
+#if 1
+#include <cassert>   /* for assert() */
+#endif
 #include <cstddef>   /* for std::size_t */
 #include <cstdio>    /* for std::snprintf() */
 #include <stdexcept> /* for std::runtime_error */
@@ -452,6 +455,27 @@ protected:
   MDB_env* _handle{nullptr};
 
 public:
+  /**
+   * Creates a new LMDB environment.
+   */
+  static env create(const unsigned int flags = 0) {
+    MDB_env* handle{nullptr};
+    lmdb::env_create(&handle);
+#if 1
+    assert(handle != nullptr);
+#endif
+    if (flags) {
+      try {
+        lmdb::env_set_flags(handle, flags);
+      }
+      catch (const lmdb::error&) {
+        lmdb::env_close(handle);
+        throw;
+      }
+    }
+    return env{handle};
+  }
+
   /**
    * Constructor.
    */
