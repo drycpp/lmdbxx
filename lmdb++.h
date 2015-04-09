@@ -439,6 +439,18 @@ protected:
 
 public:
   /**
+   * Opens a database handle.
+   */
+  static dbi
+  open(MDB_txn* const txn,
+       const char* const name = nullptr,
+       const unsigned int flags = 0) {
+    MDB_dbi handle;
+    lmdb::dbi_open(txn, name, flags, &handle);
+    return dbi{handle};
+  }
+
+  /**
    * Constructor.
    */
   dbi(MDB_dbi handle) noexcept
