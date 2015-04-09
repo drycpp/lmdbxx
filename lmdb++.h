@@ -422,5 +422,45 @@ namespace lmdb {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/* Resource Interface: Databases */
+
+namespace lmdb {
+  class dbi;
+}
+
+/**
+ * Resource class for `MDB_dbi` handles.
+ *
+ * @see http://symas.com/mdb/doc/group__mdb.html#gadbe68a06c448dfb62da16443d251a78b
+ */
+class lmdb::dbi {
+protected:
+  const MDB_dbi _handle;
+
+public:
+  /**
+   * Constructor.
+   */
+  dbi(MDB_dbi handle) noexcept
+    : _handle{handle} {}
+
+  /**
+   * Destructor.
+   */
+  ~dbi() noexcept {
+    if (_handle) {
+      /* No need to call close() here. */
+    }
+  }
+
+  /**
+   * Returns the underlying `MDB_dbi` handle.
+   */
+  MDB_dbi handle() const noexcept {
+    return _handle;
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* LMDBXX_H */
