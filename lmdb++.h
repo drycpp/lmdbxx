@@ -546,6 +546,25 @@ public:
   static constexpr unsigned int default_flags = 0;
 
   /**
+   * Creates a new LMDB transaction.
+   *
+   * @param env the environment handle
+   * @param parent
+   * @param flags
+   * @throws lmdb::error on failure
+   */
+  static txn begin(MDB_env* const env,
+                   MDB_txn* const parent = nullptr,
+                   const unsigned int flags = default_flags) {
+    MDB_txn* handle{nullptr};
+    lmdb::txn_begin(env, parent, flags, &handle);
+#if 1
+    assert(handle != nullptr);
+#endif
+    return txn{handle};
+  }
+
+  /**
    * Constructor.
    */
   txn(MDB_txn* const handle) noexcept
@@ -590,12 +609,17 @@ public:
 
   /**
    * Opens a database handle.
+   *
+   * @param txn the transaction handle
+   * @param name
+   * @param flags
+   * @throws lmdb::error on failure
    */
   static dbi
   open(MDB_txn* const txn,
        const char* const name = nullptr,
        const unsigned int flags = default_flags) {
-    MDB_dbi handle;
+    MDB_dbi handle{};
     lmdb::dbi_open(txn, name, flags, &handle);
     return dbi{handle};
   }
