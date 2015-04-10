@@ -524,6 +524,44 @@ public:
     lmdb::env_open(handle(), path, flags, mode);
     return *this;
   }
+
+  /**
+   * @param flags
+   * @param onoff
+   * @throws lmdb::error on failure
+   */
+  env& set_flags(const unsigned int flags,
+                 const bool onoff = true) {
+    lmdb::env_set_flags(handle(), flags, onoff);
+    return *this;
+  }
+
+  /**
+   * @param size
+   * @throws lmdb::error on failure
+   */
+  env& set_map_size(const std::size_t size) {
+    lmdb::env_set_map_size(handle(), size);
+    return *this;
+  }
+
+  /**
+   * @param count
+   * @throws lmdb::error on failure
+   */
+  env& set_max_readers(const unsigned int count) {
+    lmdb::env_set_max_readers(handle(), count);
+    return *this;
+  }
+
+  /**
+   * @param count
+   * @throws lmdb::error on failure
+   */
+  env& set_max_dbs(const MDB_dbi count) {
+    lmdb::env_set_max_dbs(handle(), count);
+    return *this;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
