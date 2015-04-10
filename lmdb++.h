@@ -912,10 +912,7 @@ public:
    * Destructor.
    */
   ~cursor() noexcept {
-    if (_handle) {
-      // TODO: close(_handle);
-      _handle = nullptr;
-    }
+    try { close(); } catch (...) {}
   }
 
   /**
@@ -930,6 +927,19 @@ public:
    */
   MDB_cursor* handle() const noexcept {
     return _handle;
+  }
+
+  /**
+   * Closes this cursor.
+   *
+   * @note this method is idempotent
+   * @post `handle() == nullptr`
+   */
+  void close() noexcept {
+    if (handle()) {
+      lmdb::cursor_close(handle());
+      _handle = nullptr;
+    }
   }
 };
 
