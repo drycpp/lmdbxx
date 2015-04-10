@@ -534,6 +534,13 @@ public:
   /**
    * Returns the underlying `MDB_env*` handle.
    */
+  operator MDB_env*() const {
+    return _handle;
+  }
+
+  /**
+   * Returns the underlying `MDB_env*` handle.
+   */
   MDB_env* handle() const noexcept {
     return _handle;
   }
@@ -674,6 +681,13 @@ public:
   /**
    * Returns the underlying `MDB_txn*` handle.
    */
+  operator MDB_txn*() const {
+    return _handle;
+  }
+
+  /**
+   * Returns the underlying `MDB_txn*` handle.
+   */
   MDB_txn* handle() const noexcept {
     return _handle;
   }
@@ -751,6 +765,13 @@ public:
     if (_handle) {
       /* No need to call close() here. */
     }
+  }
+
+  /**
+   * Returns the underlying `MDB_dbi` handle.
+   */
+  operator MDB_dbi() const {
+    return _handle;
   }
 
   /**
