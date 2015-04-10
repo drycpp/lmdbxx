@@ -196,7 +196,7 @@ namespace lmdb {
   // TODO: mdb_env_stat()
   // TODO: mdb_env_info()
   static inline void env_sync(MDB_env* env, bool force);
-  static inline void env_close(MDB_env* env);
+  static inline void env_close(MDB_env* env) noexcept;
   static inline void env_set_flags(MDB_env* env, unsigned int flags, bool onoff);
   // TODO: mdb_env_get_flags()
   // TODO: mdb_env_get_path()
@@ -251,10 +251,10 @@ lmdb::env_sync(MDB_env* env,
 }
 
 /**
- * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga4366c43ada8874588b6a62fbda2d1e95
  */
 static inline void
-lmdb::env_close(MDB_env* env) {
+lmdb::env_close(MDB_env* env) noexcept {
   ::mdb_env_close(env);
 }
 
@@ -313,10 +313,10 @@ lmdb::env_set_max_dbs(MDB_env* env,
 namespace lmdb {
   static inline void txn_begin(
     MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
-  static inline MDB_env* txn_env(MDB_txn* const txn);
+  static inline MDB_env* txn_env(MDB_txn* const txn) noexcept;
   static inline void txn_commit(MDB_txn* txn);
-  static inline void txn_abort(MDB_txn* txn);
-  static inline void txn_reset(MDB_txn* txn);
+  static inline void txn_abort(MDB_txn* txn) noexcept;
+  static inline void txn_reset(MDB_txn* txn) noexcept;
   static inline void txn_renew(MDB_txn* txn);
 }
 
@@ -336,11 +336,10 @@ lmdb::txn_begin(MDB_env* const env,
 }
 
 /**
- * @note never throws an exception
  * @see http://symas.com/mdb/doc/group__mdb.html#gaeb17735b8aaa2938a78a45cab85c06a0
  */
 static inline MDB_env*
-lmdb::txn_env(MDB_txn* const txn) {
+lmdb::txn_env(MDB_txn* const txn) noexcept {
   return ::mdb_txn_env(txn);
 }
 
@@ -357,20 +356,18 @@ lmdb::txn_commit(MDB_txn* const txn) {
 }
 
 /**
- * @note never throws an exception
  * @see http://symas.com/mdb/doc/group__mdb.html#ga73a5938ae4c3239ee11efa07eb22b882
  */
 static inline void
-lmdb::txn_abort(MDB_txn* const txn) {
+lmdb::txn_abort(MDB_txn* const txn) noexcept {
   ::mdb_txn_abort(txn);
 }
 
 /**
- * @note never throws an exception
  * @see http://symas.com/mdb/doc/group__mdb.html#ga02b06706f8a66249769503c4e88c56cd
  */
 static inline void
-lmdb::txn_reset(MDB_txn* const txn) {
+lmdb::txn_reset(MDB_txn* const txn) noexcept {
   ::mdb_txn_reset(txn);
 }
 
@@ -394,7 +391,7 @@ namespace lmdb {
     MDB_txn* txn, const char* name, unsigned int flags, MDB_dbi* dbi);
   static inline void dbi_stat(MDB_txn* txn, MDB_dbi dbi, MDB_stat* stat);
   static inline void dbi_flags(MDB_txn* txn, MDB_dbi dbi, unsigned int* flags);
-  static inline void dbi_close(MDB_env* env, MDB_dbi dbi);
+  static inline void dbi_close(MDB_env* env, MDB_dbi dbi) noexcept;
   // TODO: mdb_drop()
   // TODO: mdb_set_compare()
   // TODO: mdb_set_dupsort()
@@ -451,12 +448,11 @@ lmdb::dbi_flags(MDB_txn* const txn,
 }
 
 /**
- * @note never throws an exception
  * @see http://symas.com/mdb/doc/group__mdb.html#ga52dd98d0c542378370cd6b712ff961b5
  */
 static inline void
 lmdb::dbi_close(MDB_env* const env,
-                const MDB_dbi dbi) {
+                const MDB_dbi dbi) noexcept {
   ::mdb_dbi_close(env, dbi);
 }
 
