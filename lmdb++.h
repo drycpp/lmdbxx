@@ -43,10 +43,13 @@ namespace lmdb {
   class runtime_error;
   class key_exist_error;
   class not_found_error;
+  class corrupted_error;
 }
 
 /**
  * Base class for LMDB exception conditions.
+ *
+ * @see http://symas.com/mdb/doc/group__errors.html
  */
 class lmdb::error : public std::runtime_error {
 protected:
@@ -117,6 +120,8 @@ public:
 
 /**
  * Exception class for `MDB_KEYEXIST` errors.
+ *
+ * @see http://symas.com/mdb/doc/group__errors.html#ga05dc5bbcc7da81a7345bd8676e8e0e3b
  */
 class lmdb::key_exist_error final : public lmdb::runtime_error {
 public:
@@ -125,18 +130,31 @@ public:
 
 /**
  * Exception class for `MDB_NOTFOUND` errors.
+ *
+ * @see http://symas.com/mdb/doc/group__errors.html#gabeb52e4c4be21b329e31c4add1b71926
  */
 class lmdb::not_found_error final : public lmdb::runtime_error {
 public:
   using runtime_error::runtime_error;
 };
 
+/**
+ * Exception class for `MDB_CORRUPTED` errors.
+ *
+ * @see http://symas.com/mdb/doc/group__errors.html#gaf8148bf1b85f58e264e57194bafb03ef
+ */
+class lmdb::corrupted_error final : public lmdb::fatal_error {
+public:
+  using fatal_error::fatal_error;
+};
+
 inline void
 lmdb::error::raise(const char* const origin,
                    const int rc) {
   switch (rc) {
-    case MDB_KEYEXIST: throw key_exist_error{origin, rc};
-    case MDB_NOTFOUND: throw not_found_error{origin, rc};
+    case MDB_KEYEXIST:  throw key_exist_error{origin, rc};
+    case MDB_NOTFOUND:  throw not_found_error{origin, rc};
+    case MDB_CORRUPTED: throw corrupted_error{origin, rc};
     default: throw error{origin, rc};
   }
 }
