@@ -480,7 +480,7 @@ namespace lmdb {
   static inline void cursor_renew(MDB_txn* txn, MDB_cursor* cursor);
   static inline MDB_txn* cursor_txn(MDB_cursor* cursor) noexcept;
   static inline MDB_dbi cursor_dbi(MDB_cursor* cursor) noexcept;
-  static inline void cursor_get(MDB_cursor* cursor, MDB_val* key, MDB_val* data, MDB_cursor_op op);
+  static inline bool cursor_get(MDB_cursor* cursor, MDB_val* key, MDB_val* data, MDB_cursor_op op);
   static inline void cursor_put(MDB_cursor* cursor, MDB_val* key, MDB_val* data, unsigned int flags);
   static inline void cursor_del(MDB_cursor* cursor, unsigned int flags);
   static inline void cursor_count(MDB_cursor* cursor, std::size_t& count);
@@ -541,15 +541,16 @@ lmdb::cursor_dbi(MDB_cursor* const cursor) noexcept {
  * @throws lmdb::error on failure
  * @see http://symas.com/mdb/doc/group__mdb.html#ga48df35fb102536b32dfbb801a47b4cb0
  */
-static inline void
+static inline bool
 lmdb::cursor_get(MDB_cursor* const cursor,
                  MDB_val* const key,
                  MDB_val* const data,
                  const MDB_cursor_op op) {
   const int rc = ::mdb_cursor_get(cursor, key, data, op);
-  if (rc != MDB_SUCCESS) {
+  if (rc != MDB_SUCCESS && rc != MDB_NOTFOUND) {
     error::raise("mdb_cursor_get", rc);
   }
+  return (rc == MDB_SUCCESS);
 }
 
 /**
@@ -1095,6 +1096,20 @@ public:
    */
   MDB_dbi dbi() const noexcept {
     return lmdb::cursor_dbi(handle());
+  }
+
+  /**
+   * Retrieves key/value pairs from the database.
+   *
+   * @param key
+   * @param data
+   * @param op
+   * @throws lmdb::error on failure
+   */
+  bool get(MDB_val* const key,
+           MDB_val* const data,
+           const MDB_cursor_op op) {
+    return lmdb::cursor_get(handle(), key, data, op);
   }
 };
 
