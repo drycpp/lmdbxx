@@ -461,7 +461,7 @@ lmdb::dbi_close(MDB_env* const env,
 /* Procedural Interface: Cursors */
 
 namespace lmdb {
-  // TODO: mdb_cursor_open()
+  static inline void cursor_open(MDB_txn* txn, MDB_dbi dbi, MDB_cursor** cursor);
   static inline void cursor_close(MDB_cursor* cursor);
   // TODO: mdb_cursor_close()
   // TODO: mdb_cursor_renew()
@@ -474,8 +474,18 @@ namespace lmdb {
 }
 
 /**
+ * @throws lmdb::error on failure
  * @see http://symas.com/mdb/doc/group__mdb.html#ga9ff5d7bd42557fd5ee235dc1d62613aa
  */
+static inline void
+lmdb::cursor_open(MDB_txn* const txn,
+                  const MDB_dbi dbi,
+                  MDB_cursor** const cursor) {
+  const int rc = ::mdb_cursor_open(txn, dbi, cursor);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_cursor_open", rc);
+  }
+}
 
 /**
  * @note never throws an exception
