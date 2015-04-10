@@ -827,6 +827,16 @@ public:
     lmdb::dbi_flags(txn, handle(), &result);
     return result;
   }
+
+  /**
+   * Returns the number of records in this database.
+   *
+   * @param txn a transaction handle
+   * @throws lmdb::error on failure
+   */
+  std::size_t size(MDB_txn* const txn) const {
+    return stat(txn).ms_entries;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
