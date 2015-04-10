@@ -466,7 +466,7 @@ lmdb::dbi_close(MDB_env* const env,
 namespace lmdb {
   static inline void cursor_open(MDB_txn* txn, MDB_dbi dbi, MDB_cursor** cursor);
   static inline void cursor_close(MDB_cursor* cursor);
-  // TODO: mdb_cursor_renew()
+  static inline void cursor_renew(MDB_txn* txn, MDB_cursor* cursor);
   static inline MDB_txn* cursor_txn(MDB_cursor* cursor) noexcept;
   static inline MDB_dbi cursor_dbi(MDB_cursor* cursor) noexcept;
   // TODO: mdb_cursor_get()
@@ -496,6 +496,19 @@ lmdb::cursor_open(MDB_txn* const txn,
 static inline void
 lmdb::cursor_close(MDB_cursor* const cursor) {
   ::mdb_cursor_close(cursor);
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gac8b57befb68793070c85ea813df481af
+ */
+static inline void
+lmdb::cursor_renew(MDB_txn* const txn,
+                   MDB_cursor* const cursor) {
+  const int rc = ::mdb_cursor_renew(txn, cursor);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_cursor_renew", rc);
+  }
 }
 
 /**
