@@ -959,6 +959,20 @@ public:
       _handle = nullptr;
     }
   }
+
+  /**
+   * Returns the cursor's transaction handle.
+   */
+  MDB_txn* txn() const noexcept {
+    return lmdb::cursor_txn(handle());
+  }
+
+  /**
+   * Returns the cursor's database handle.
+   */
+  MDB_dbi dbi() const noexcept {
+    return lmdb::cursor_dbi(handle());
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
