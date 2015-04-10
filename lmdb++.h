@@ -463,7 +463,7 @@ lmdb::dbi_close(MDB_env* const env,
 static inline void
 lmdb::dbi_set_compare(MDB_txn* const txn,
                       const MDB_dbi dbi,
-                      MDB_cmp_func* const cmp) {
+                      MDB_cmp_func* const cmp = nullptr) {
   const int rc = ::mdb_set_compare(txn, dbi, cmp);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_set_compare", rc);
@@ -972,6 +972,19 @@ public:
    */
   std::size_t size(MDB_txn* const txn) const {
     return stat(txn).ms_entries;
+  }
+
+  /**
+   * Sets a custom key comparison function for this database.
+   *
+   * @param txn a transaction handle
+   * @param cmp the comparison function
+   * @throws lmdb::error on failure
+   */
+  dbi& set_compare(MDB_txn* const txn,
+                   MDB_cmp_func* const cmp = nullptr) {
+    lmdb::dbi_set_compare(txn, handle(), cmp);
+    return *this;
   }
 
   /**
