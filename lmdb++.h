@@ -552,6 +552,7 @@ public:
    * Closes this environment, releasing the memory map.
    *
    * @note this method is idempotent
+   * @post `handle() == nullptr`
    */
   void close() noexcept {
     if (handle()) {
@@ -675,6 +676,27 @@ public:
    */
   MDB_txn* handle() const noexcept {
     return _handle;
+  }
+
+  /**
+   * Commits this transaction.
+   *
+   * @throws lmdb::error on failure
+   * @post `handle() == nullptr`
+   */
+  void commit() {
+    lmdb::txn_commit(_handle);
+    _handle = nullptr;
+  }
+
+  /**
+   * Aborts this transaction.
+   *
+   * @post `handle() == nullptr`
+   */
+  void abort() noexcept {
+    lmdb::txn_abort(_handle);
+    _handle = nullptr;
   }
 };
 
