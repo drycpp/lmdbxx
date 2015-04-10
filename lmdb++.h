@@ -1078,6 +1078,7 @@ public:
   /**
    * Renews this cursor.
    *
+   * @param txn the transaction scope
    * @throws lmdb::error on failure
    */
   void renew(MDB_txn* const txn) {
@@ -1099,7 +1100,7 @@ public:
   }
 
   /**
-   * Retrieves key/value pairs from the database.
+   * Retrieves a key/value pair from the database.
    *
    * @param key
    * @param data
@@ -1110,6 +1111,20 @@ public:
            MDB_val* const data,
            const MDB_cursor_op op) {
     return lmdb::cursor_get(handle(), key, data, op);
+  }
+
+  /**
+   * Positions this cursor at the given key.
+   *
+   * @param k
+   * @throws lmdb::error on failure
+   */
+  template<typename K>
+  bool find(const K& k) const {
+    MDB_val key, val{};
+    key.mv_size = sizeof(K);
+    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
+    return lmdb::cursor_get(handle(), &key, &val, MDB_SET);
   }
 };
 
