@@ -1120,11 +1120,11 @@ public:
    * @throws lmdb::error on failure
    */
   template<typename K>
-  bool find(const K& k) const {
+  bool find(const K& k) {
     MDB_val key, val{};
     key.mv_size = sizeof(K);
     key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    return lmdb::cursor_get(handle(), &key, &val, MDB_SET);
+    return get(&key, &val, MDB_SET);
   }
 };
 
