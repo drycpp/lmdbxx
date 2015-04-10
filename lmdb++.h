@@ -1100,10 +1100,22 @@ public:
   }
 
   /**
+   * Retrieves a key from the database.
+   *
+   * @param key
+   * @param op
+   * @throws lmdb::error on failure
+   */
+  bool get(MDB_val* const key,
+           const MDB_cursor_op op) {
+    return get(key, nullptr, op);
+  }
+
+  /**
    * Retrieves a key/value pair from the database.
    *
    * @param key
-   * @param data
+   * @param data (may be `nullptr`)
    * @param op
    * @throws lmdb::error on failure
    */
