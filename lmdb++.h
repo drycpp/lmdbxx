@@ -883,6 +883,24 @@ public:
   static constexpr unsigned int default_flags = 0;
 
   /**
+   * Creates an LMDB cursor.
+   *
+   * @param txn the transaction handle
+   * @param dbi the database handle
+   * @throws lmdb::error on failure
+   */
+  static cursor
+  open(MDB_txn* const txn,
+       const MDB_dbi dbi) {
+    MDB_cursor* handle{};
+    lmdb::cursor_open(txn, dbi, &handle);
+#if 1
+    assert(handle != nullptr);
+#endif
+    return cursor{handle};
+  }
+
+  /**
    * Constructor.
    *
    * @param handle a valid `MDB_cursor*` handle
