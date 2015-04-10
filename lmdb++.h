@@ -461,6 +461,7 @@ public:
   /**
    * Creates a new LMDB environment.
    *
+   * @param flags
    * @throws lmdb::error on failure
    */
   static env create(const unsigned int flags = default_flags) {
@@ -483,6 +484,8 @@ public:
 
   /**
    * Constructor.
+   *
+   * @param handle a valid `MDB_env*` handle
    */
   env(MDB_env* const handle) noexcept
     : _handle{handle} {}
@@ -502,6 +505,16 @@ public:
   }
 
   /**
+   * Flushes data buffers to disk.
+   *
+   * @param force
+   * @throws lmdb::error on failure
+   */
+  void sync(const bool force = true) {
+    lmdb::env_sync(handle(), force);
+  }
+
+  /**
    * Closes this environment, releasing the memory map.
    *
    * @note this method is idempotent
@@ -516,6 +529,9 @@ public:
   /**
    * Opens this environment.
    *
+   * @param path
+   * @param flags
+   * @param mode
    * @throws lmdb::error on failure
    */
   env& open(const char* const path,
@@ -604,6 +620,8 @@ public:
 
   /**
    * Constructor.
+   *
+   * @param handle a valid `MDB_txn*` handle
    */
   txn(MDB_txn* const handle) noexcept
     : _handle{handle} {}
@@ -664,6 +682,8 @@ public:
 
   /**
    * Constructor.
+   *
+   * @param handle a valid `MDB_dbi` handle
    */
   dbi(const MDB_dbi handle) noexcept
     : _handle{handle} {}
