@@ -712,6 +712,22 @@ public:
     lmdb::txn_abort(_handle);
     _handle = nullptr;
   }
+
+  /**
+   * Resets this read-only transaction.
+   */
+  void reset() noexcept {
+    lmdb::txn_reset(_handle);
+  }
+
+  /**
+   * Renews this read-only transaction.
+   *
+   * @throws lmdb::error on failure
+   */
+  void renew() {
+    lmdb::txn_renew(_handle);
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
