@@ -840,5 +840,57 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+/* Resource Interface: Cursors */
+
+namespace lmdb {
+  class cursor;
+}
+
+/**
+ * Resource class for `MDB_cursor*` handles.
+ *
+ * @see http://symas.com/mdb/doc/group__internal.html#structMDB__cursor
+ */
+class lmdb::cursor {
+protected:
+  MDB_cursor* _handle;
+
+public:
+  static constexpr unsigned int default_flags = 0;
+
+  /**
+   * Constructor.
+   *
+   * @param handle a valid `MDB_cursor*` handle
+   */
+  cursor(MDB_cursor* const handle) noexcept
+    : _handle{handle} {}
+
+  /**
+   * Destructor.
+   */
+  ~cursor() noexcept {
+    if (_handle) {
+      // TODO: close(_handle);
+      _handle = nullptr;
+    }
+  }
+
+  /**
+   * Returns the underlying `MDB_cursor*` handle.
+   */
+  operator MDB_cursor*() const {
+    return _handle;
+  }
+
+  /**
+   * Returns the underlying `MDB_cursor*` handle.
+   */
+  MDB_cursor* handle() const noexcept {
+    return _handle;
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* LMDBXX_H */
