@@ -398,6 +398,7 @@ namespace lmdb {
   // TODO: mdb_set_relfunc()
   // TODO: mdb_set_relctx()
   static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
+  static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data, unsigned int flags);
   // TODO: mdb_put()
   // TODO: mdb_del()
   // TODO: mdb_cmp()
@@ -481,6 +482,22 @@ lmdb::dbi_get(MDB_txn* const txn,
   const int rc = ::mdb_get(txn, dbi, key, data);
   if (rc != MDB_SUCCESS && rc != MDB_NOTFOUND) {
     error::raise("mdb_get", rc);
+  }
+  return (rc == MDB_SUCCESS);
+}
+
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga4fa8573d9236d54687c61827ebf8cac0
+ */
+static inline bool
+lmdb::dbi_put(MDB_txn* const txn,
+              const MDB_dbi dbi,
+              MDB_val* const key,
+              MDB_val* const data,
+              const unsigned int flags = 0) {
+  const int rc = ::mdb_put(txn, dbi, key, data, flags);
+  if (rc != MDB_SUCCESS && rc != MDB_KEYEXIST) {
+    error::raise("mdb_put", rc);
   }
   return (rc == MDB_SUCCESS);
 }
@@ -890,7 +907,8 @@ protected:
   const MDB_dbi _handle;
 
 public:
-  static constexpr unsigned int default_flags = 0;
+  static constexpr unsigned int default_flags     = 0;
+  static constexpr unsigned int default_put_flags = 0;
 
   /**
    * Opens a database handle.
@@ -1006,6 +1024,8 @@ public:
    * Retrieves a key/value pair from this database.
    *
    * @param txn a transaction handle
+   * @param k
+   * @param v
    * @throws lmdb::error on failure
    */
   template<typename K, typename V>
@@ -1020,6 +1040,44 @@ public:
       v = *reinterpret_cast<const V*>(val.mv_data);
     }
     return result;
+  }
+
+  /**
+   * Stores a key into this database.
+   *
+   * @param txn a transaction handle
+   * @param k
+   * @throws lmdb::error on failure
+   */
+  template<typename K>
+  bool put(MDB_txn* const txn,
+           const K& k,
+           const unsigned int flags = default_put_flags) {
+    MDB_val key, val{};
+    key.mv_size = sizeof(K);
+    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
+    return lmdb::dbi_put(txn, handle(), &key, &val, flags);
+  }
+
+  /**
+   * Stores a key/value pair into this database.
+   *
+   * @param txn a transaction handle
+   * @param k
+   * @param v
+   * @throws lmdb::error on failure
+   */
+  template<typename K, typename V>
+  bool put(MDB_txn* const txn,
+           const K& k,
+           const V& v,
+           const unsigned int flags = default_put_flags) {
+    MDB_val key, val;
+    key.mv_size = sizeof(K);
+    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
+    val.mv_size = sizeof(V);
+    val.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&v));
+    return lmdb::dbi_put(txn, handle(), &key, &val, flags);
   }
 };
 
