@@ -397,7 +397,7 @@ namespace lmdb {
   // TODO: mdb_set_dupsort()
   // TODO: mdb_set_relfunc()
   // TODO: mdb_set_relctx()
-  // TODO: mdb_get()
+  static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
   // TODO: mdb_put()
   // TODO: mdb_del()
   // TODO: mdb_cmp()
@@ -454,6 +454,21 @@ static inline void
 lmdb::dbi_close(MDB_env* const env,
                 const MDB_dbi dbi) noexcept {
   ::mdb_dbi_close(env, dbi);
+}
+
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga8bf10cd91d3f3a83a34d04ce6b07992d
+ */
+static inline bool
+lmdb::dbi_get(MDB_txn* const txn,
+              const MDB_dbi dbi,
+              MDB_val* const key,
+              MDB_val* const data) {
+  const int rc = ::mdb_get(txn, dbi, key, data);
+  if (rc != MDB_SUCCESS && rc != MDB_NOTFOUND) {
+    error::raise("mdb_get", rc);
+  }
+  return (rc == MDB_SUCCESS);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
