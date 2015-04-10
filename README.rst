@@ -51,6 +51,16 @@ LMDB error conditions:
    ``std::runtime_error``. The standard exception class ``std::bad_alloc``,
    on the other hand, is a representative example of a fatal error.
 
+======================== =============================== =======================
+Error code               Exception class                 Exception type
+======================== =============================== =======================
+``MDB_KEYEXIST``         ``lmdb::key_exist_error``       ``lmdb::runtime_error``
+``MDB_NOTFOUND``         ``lmdb::not_found_error``       ``lmdb::runtime_error``
+``MDB_CORRUPTED``        ``lmdb::corrupted_error``       ``lmdb::fatal_error``
+``MDB_PANIC``            ``lmdb::panic_error``           ``lmdb::fatal_error``
+(others)                 ``lmdb::runtime_error``         ``lmdb::runtime_error``
+======================== =============================== =======================
+
 Elsewhere
 =========
 
