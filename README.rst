@@ -18,6 +18,16 @@ Features
 * 100% free and unencumbered `public domain <http://unlicense.org/>`_ software,
   usable in any context and for any purpose.
 
+======================== =======================================================
+C handle                 C++ wrapper class
+======================== =======================================================
+``MDB_env*``             ``lmdb::env``
+``MDB_txn*``             ``lmdb::txn``
+``MDB_dbi``              ``lmdb::dbi``
+``MDB_cursor*``          ``lmdb::cursor``
+``MDB_val``              ``lmdb::val``
+======================== =======================================================
+
 Error Handling
 --------------
 
@@ -60,6 +70,10 @@ Error code               Exception class                 Exception type
 ``MDB_PANIC``            ``lmdb::panic_error``           ``lmdb::fatal_error``
 (others)                 ``lmdb::runtime_error``         ``lmdb::runtime_error``
 ======================== =============================== =======================
+
+.. note::
+
+   ``MDB_KEYEXIST`` and ``MDB_NOTFOUND`` are handled specially by some functions.
 
 Elsewhere
 =========
