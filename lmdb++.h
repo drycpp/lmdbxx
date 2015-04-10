@@ -462,6 +462,7 @@ lmdb::dbi_close(MDB_env* const env,
 
 namespace lmdb {
   // TODO: mdb_cursor_open()
+  static inline void cursor_close(MDB_cursor* cursor);
   // TODO: mdb_cursor_close()
   // TODO: mdb_cursor_renew()
   // TODO: mdb_cursor_txn()
@@ -470,6 +471,19 @@ namespace lmdb {
   // TODO: mdb_cursor_put()
   // TODO: mdb_cursor_del()
   // TODO: mdb_cursor_count()
+}
+
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga9ff5d7bd42557fd5ee235dc1d62613aa
+ */
+
+/**
+ * @note never throws an exception
+ * @see http://symas.com/mdb/doc/group__mdb.html#gad685f5d73c052715c7bd859cc4c05188
+ */
+static inline void
+lmdb::cursor_close(MDB_cursor* const cursor) {
+  ::mdb_cursor_close(cursor);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
