@@ -472,7 +472,7 @@ namespace lmdb {
   // TODO: mdb_cursor_get()
   // TODO: mdb_cursor_put()
   static inline void cursor_del(MDB_cursor* cursor, unsigned int flags);
-  // TODO: mdb_cursor_count()
+  static inline void cursor_count(MDB_cursor* cursor, std::size_t& count);
 }
 
 /**
@@ -536,6 +536,19 @@ lmdb::cursor_del(MDB_cursor* const cursor,
   const int rc = ::mdb_cursor_del(cursor, flags);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_cursor_del", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga4041fd1e1862c6b7d5f10590b86ffbe2
+ */
+static inline void
+lmdb::cursor_count(MDB_cursor* const cursor,
+                   std::size_t& count) {
+  const int rc = ::mdb_cursor_count(cursor, &count);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_cursor_count", rc);
   }
 }
 
