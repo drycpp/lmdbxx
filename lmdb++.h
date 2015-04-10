@@ -393,7 +393,7 @@ namespace lmdb {
   static inline void dbi_flags(MDB_txn* txn, MDB_dbi dbi, unsigned int* flags);
   static inline void dbi_close(MDB_env* env, MDB_dbi dbi) noexcept;
   // TODO: mdb_drop()
-  // TODO: mdb_set_compare()
+  static inline void dbi_set_compare(MDB_txn* txn, MDB_dbi dbi, MDB_cmp_func* cmp);
   // TODO: mdb_set_dupsort()
   // TODO: mdb_set_relfunc()
   // TODO: mdb_set_relctx()
@@ -454,6 +454,20 @@ static inline void
 lmdb::dbi_close(MDB_env* const env,
                 const MDB_dbi dbi) noexcept {
   ::mdb_dbi_close(env, dbi);
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga68e47ffcf72eceec553c72b1784ee0fe
+ */
+static inline void
+lmdb::dbi_set_compare(MDB_txn* const txn,
+                      const MDB_dbi dbi,
+                      MDB_cmp_func* const cmp) {
+  const int rc = ::mdb_set_compare(txn, dbi, cmp);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_set_compare", rc);
+  }
 }
 
 /**
@@ -1069,8 +1083,8 @@ public:
    * @post `handle() == nullptr`
    */
   void close() noexcept {
-    if (handle()) {
-      lmdb::cursor_close(handle());
+    if (_handle) {
+      lmdb::cursor_close(_handle);
       _handle = nullptr;
     }
   }
@@ -1129,14 +1143,16 @@ public:
    * Positions this cursor at the given key.
    *
    * @param k
+   * @param op
    * @throws lmdb::error on failure
    */
   template<typename K>
-  bool find(const K& k) {
-    MDB_val key, val{};
+  bool find(const K& k,
+            const MDB_cursor_op op = MDB_SET) {
+    MDB_val key;
     key.mv_size = sizeof(K);
     key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    return get(&key, &val, MDB_SET);
+    return get(&key, nullptr, op);
   }
 };
 
