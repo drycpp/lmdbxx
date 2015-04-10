@@ -1075,6 +1075,15 @@ public:
   }
 
   /**
+   * Renews this cursor.
+   *
+   * @throws lmdb::error on failure
+   */
+  void renew(MDB_txn* const txn) {
+    lmdb::cursor_renew(txn, handle());
+  }
+
+  /**
    * Returns the cursor's transaction handle.
    */
   MDB_txn* txn() const noexcept {
