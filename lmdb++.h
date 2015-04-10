@@ -958,6 +958,41 @@ public:
   std::size_t size(MDB_txn* const txn) const {
     return stat(txn).ms_entries;
   }
+
+  /**
+   * Retrieves a key from this database.
+   *
+   * @param txn a transaction handle
+   * @throws lmdb::error on failure
+   */
+  template<typename K>
+  bool get(MDB_txn* const txn,
+           const K& k) const {
+    MDB_val key, val{};
+    key.mv_size = sizeof(K);
+    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
+    return lmdb::dbi_get(txn, handle(), &key, &val);
+  }
+
+  /**
+   * Retrieves a key/value pair from this database.
+   *
+   * @param txn a transaction handle
+   * @throws lmdb::error on failure
+   */
+  template<typename K, typename V>
+  bool get(MDB_txn* const txn,
+           const K& k,
+           V& v) const {
+    MDB_val key, val{};
+    key.mv_size = sizeof(K);
+    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
+    const bool result = lmdb::dbi_get(txn, handle(), &key, &val);
+    if (result) {
+      v = *reinterpret_cast<const V*>(val.mv_data);
+    }
+    return result;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
