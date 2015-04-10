@@ -693,6 +693,13 @@ public:
   }
 
   /**
+   * Returns the transaction's `MDB_env*` handle.
+   */
+  MDB_env* env() const noexcept {
+    return lmdb::txn_env(handle());
+  }
+
+  /**
    * Commits this transaction.
    *
    * @throws lmdb::error on failure
