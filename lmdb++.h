@@ -469,8 +469,8 @@ namespace lmdb {
   static inline void cursor_renew(MDB_txn* txn, MDB_cursor* cursor);
   static inline MDB_txn* cursor_txn(MDB_cursor* cursor) noexcept;
   static inline MDB_dbi cursor_dbi(MDB_cursor* cursor) noexcept;
-  // TODO: mdb_cursor_get()
-  // TODO: mdb_cursor_put()
+  static inline void cursor_get(MDB_cursor* cursor, MDB_val* key, MDB_val* data, MDB_cursor_op op);
+  static inline void cursor_put(MDB_cursor* cursor, MDB_val* key, MDB_val* data, unsigned int flags);
   static inline void cursor_del(MDB_cursor* cursor, unsigned int flags);
   static inline void cursor_count(MDB_cursor* cursor, std::size_t& count);
 }
@@ -524,6 +524,36 @@ lmdb::cursor_txn(MDB_cursor* const cursor) noexcept {
 static inline MDB_dbi
 lmdb::cursor_dbi(MDB_cursor* const cursor) noexcept {
   return ::mdb_cursor_dbi(cursor);
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga48df35fb102536b32dfbb801a47b4cb0
+ */
+static inline void
+lmdb::cursor_get(MDB_cursor* const cursor,
+                 MDB_val* const key,
+                 MDB_val* const data,
+                 const MDB_cursor_op op) {
+  const int rc = ::mdb_cursor_get(cursor, key, data, op);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_cursor_get", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga1f83ccb40011837ff37cc32be01ad91e
+ */
+static inline void
+lmdb::cursor_put(MDB_cursor* const cursor,
+                 MDB_val* const key,
+                 MDB_val* const data,
+                 const unsigned int flags = 0) {
+  const int rc = ::mdb_cursor_put(cursor, key, data, flags);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_cursor_put", rc);
+  }
 }
 
 /**
