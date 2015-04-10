@@ -815,6 +815,18 @@ public:
     lmdb::dbi_stat(txn, handle(), &result);
     return result;
   }
+
+  /**
+   * Retrieves the flags for this database handle.
+   *
+   * @param txn a transaction handle
+   * @throws lmdb::error on failure
+   */
+  unsigned int flags(MDB_txn* const txn) const {
+    unsigned int result{};
+    lmdb::dbi_flags(txn, handle(), &result);
+    return result;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
