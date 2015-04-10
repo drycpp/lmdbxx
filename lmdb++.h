@@ -44,6 +44,7 @@ namespace lmdb {
   class key_exist_error;
   class not_found_error;
   class corrupted_error;
+  class panic_error;
 }
 
 /**
@@ -148,6 +149,16 @@ public:
   using fatal_error::fatal_error;
 };
 
+/**
+ * Exception class for `MDB_PANIC` errors.
+ *
+ * @see http://symas.com/mdb/doc/group__errors.html#gae37b9aedcb3767faba3de8c1cf6d3473
+ */
+class lmdb::panic_error final : public lmdb::fatal_error {
+public:
+  using fatal_error::fatal_error;
+};
+
 inline void
 lmdb::error::raise(const char* const origin,
                    const int rc) {
@@ -155,7 +166,8 @@ lmdb::error::raise(const char* const origin,
     case MDB_KEYEXIST:  throw key_exist_error{origin, rc};
     case MDB_NOTFOUND:  throw not_found_error{origin, rc};
     case MDB_CORRUPTED: throw corrupted_error{origin, rc};
-    default: throw error{origin, rc};
+    case MDB_PANIC:     throw panic_error{origin, rc};
+    default: throw lmdb::runtime_error{origin, rc};
   }
 }
 
