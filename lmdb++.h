@@ -20,14 +20,17 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <lmdb.h>    /* for MDB_*, mdb_*() */
+#include <lmdb.h>      /* for MDB_*, mdb_*() */
 
 #if 1
-#include <cassert>   /* for assert() */
+#include <cassert>     /* for assert() */
 #endif
-#include <cstddef>   /* for std::size_t */
-#include <cstdio>    /* for std::snprintf() */
-#include <stdexcept> /* for std::runtime_error */
+#include <cstddef>     /* for std::size_t */
+#include <cstdio>      /* for std::snprintf() */
+#include <cstring>     /* for std::strlen() */
+#include <stdexcept>   /* for std::runtime_error */
+#include <string>      /* for std::string */
+#include <type_traits> /* for std::is_pod<> */
 
 namespace lmdb {
   using mode = mdb_mode_t;
@@ -558,7 +561,7 @@ public:
   /**
    * Returns the underlying `MDB_env*` handle.
    */
-  operator MDB_env*() const {
+  operator MDB_env*() const noexcept {
     return _handle;
   }
 
@@ -705,7 +708,7 @@ public:
   /**
    * Returns the underlying `MDB_txn*` handle.
    */
-  operator MDB_txn*() const {
+  operator MDB_txn*() const noexcept {
     return _handle;
   }
 
@@ -817,7 +820,7 @@ public:
   /**
    * Returns the underlying `MDB_dbi` handle.
    */
-  operator MDB_dbi() const {
+  operator MDB_dbi() const noexcept {
     return _handle;
   }
 
@@ -918,7 +921,7 @@ public:
   /**
    * Returns the underlying `MDB_cursor*` handle.
    */
-  operator MDB_cursor*() const {
+  operator MDB_cursor*() const noexcept {
     return _handle;
   }
 
@@ -942,6 +945,70 @@ public:
     }
   }
 };
+
+////////////////////////////////////////////////////////////////////////////////
+/* Resource Interface: Values */
+
+namespace lmdb {
+  class val;
+}
+
+/**
+ * Wrapper class for `MDB_val` structures.
+ *
+ * @see http://symas.com/mdb/doc/group__mdb.html#structMDB__val
+ */
+class lmdb::val {
+protected:
+  MDB_val _val;
+
+public:
+  /**
+   * Default constructor.
+   */
+  val() noexcept = default;
+
+  /**
+   * Constructor.
+   */
+  val(const std::string& data) noexcept
+    : val{data.data(), data.size()} {}
+
+  /**
+   * Constructor.
+   */
+  val(const char* const data) noexcept
+    : val{data, std::strlen(data)} {}
+
+  /**
+   * Constructor.
+   */
+  val(const char* const data,
+      const std::size_t size) noexcept
+    : _val{size, const_cast<char*>(data)} {}
+
+  /**
+   * Destructor.
+   */
+  ~val() noexcept = default;
+
+  /**
+   * Returns an `MDB_val*` pointer.
+   */
+  operator MDB_val*() noexcept {
+    return &_val;
+  }
+
+  /**
+   * Returns an `MDB_val*` pointer.
+   */
+  operator const MDB_val*() const noexcept {
+    return &_val;
+  }
+};
+
+static_assert(std::is_pod<lmdb::val>::value, "lmdb::val must be a POD type");
+static_assert(sizeof(lmdb::val) == sizeof(MDB_val), "sizeof(lmdb::val) != sizeof(MDB_val)");
 
 ////////////////////////////////////////////////////////////////////////////////
 
