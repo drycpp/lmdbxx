@@ -14,6 +14,10 @@
 #error "<lmdb++.h> requires a C++ compiler"
 #endif
 
+#if __cplusplus < 201103L
+#error "<lmdb++.h> requires a C++11 compiler (CXXFLAGS='-std=c++11')"
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <lmdb.h>    /* for MDB_*, mdb_*() */
