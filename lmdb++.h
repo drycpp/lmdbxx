@@ -695,6 +695,22 @@ public:
   /**
    * Returns a pointer to the data;
    */
+  template<typename T>
+  T* data() noexcept {
+    return reinterpret_cast<T*>(_val.mv_data);
+  }
+
+  /**
+   * Returns a pointer to the data;
+   */
+  template<typename T>
+  const T* data() const noexcept {
+    return reinterpret_cast<T*>(_val.mv_data);
+  }
+
+  /**
+   * Returns a pointer to the data;
+   */
   char* data() noexcept {
     return reinterpret_cast<char*>(_val.mv_data);
   }
@@ -704,6 +720,31 @@ public:
    */
   const char* data() const noexcept {
     return reinterpret_cast<char*>(_val.mv_data);
+  }
+
+  /**
+   * Assigns the value.
+   */
+  template<typename T>
+  val& assign(const T* const data,
+              const std::size_t size) noexcept {
+    _val.mv_size = size;
+    _val.mv_data = const_cast<void*>(reinterpret_cast<const void*>(data));
+    return *this;
+  }
+
+  /**
+   * Assigns the value.
+   */
+  val& assign(const char* const data) noexcept {
+    return assign(data, std::strlen(data));
+  }
+
+  /**
+   * Assigns the value.
+   */
+  val& assign(const std::string& data) noexcept {
+    return assign(data.data(), data.size());
   }
 };
 
