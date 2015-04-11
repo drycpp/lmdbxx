@@ -626,6 +626,91 @@ lmdb::cursor_count(MDB_cursor* const cursor,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/* Resource Interface: Values */
+
+namespace lmdb {
+  class val;
+}
+
+/**
+ * Wrapper class for `MDB_val` structures.
+ *
+ * @see http://symas.com/mdb/doc/group__mdb.html#structMDB__val
+ */
+class lmdb::val {
+protected:
+  MDB_val _val;
+
+public:
+  /**
+   * Default constructor.
+   */
+  val() noexcept = default;
+
+  /**
+   * Constructor.
+   */
+  val(const std::string& data) noexcept
+    : val{data.data(), data.size()} {}
+
+  /**
+   * Constructor.
+   */
+  val(const char* const data) noexcept
+    : val{data, std::strlen(data)} {}
+
+  /**
+   * Constructor.
+   */
+  val(const char* const data,
+      const std::size_t size) noexcept
+    : _val{size, const_cast<char*>(data)} {}
+
+  /**
+   * Destructor.
+   */
+  ~val() noexcept = default;
+
+  /**
+   * Returns an `MDB_val*` pointer.
+   */
+  operator MDB_val*() noexcept {
+    return &_val;
+  }
+
+  /**
+   * Returns an `MDB_val*` pointer.
+   */
+  operator const MDB_val*() const noexcept {
+    return &_val;
+  }
+
+  /**
+   * Returns the size of the data.
+   */
+  std::size_t size() const noexcept {
+    return _val.mv_size;
+  }
+
+  /**
+   * Returns a pointer to the data;
+   */
+  char* data() noexcept {
+    return reinterpret_cast<char*>(_val.mv_data);
+  }
+
+  /**
+   * Returns a pointer to the data;
+   */
+  const char* data() const noexcept {
+    return reinterpret_cast<char*>(_val.mv_data);
+  }
+};
+
+static_assert(std::is_pod<lmdb::val>::value, "lmdb::val must be a POD type");
+static_assert(sizeof(lmdb::val) == sizeof(MDB_val), "sizeof(lmdb::val) != sizeof(MDB_val)");
+
+////////////////////////////////////////////////////////////////////////////////
 /* Resource Interface: Environment */
 
 namespace lmdb {
@@ -1226,70 +1311,6 @@ public:
     return get(&key, nullptr, op);
   }
 };
-
-////////////////////////////////////////////////////////////////////////////////
-/* Resource Interface: Values */
-
-namespace lmdb {
-  class val;
-}
-
-/**
- * Wrapper class for `MDB_val` structures.
- *
- * @see http://symas.com/mdb/doc/group__mdb.html#structMDB__val
- */
-class lmdb::val {
-protected:
-  MDB_val _val;
-
-public:
-  /**
-   * Default constructor.
-   */
-  val() noexcept = default;
-
-  /**
-   * Constructor.
-   */
-  val(const std::string& data) noexcept
-    : val{data.data(), data.size()} {}
-
-  /**
-   * Constructor.
-   */
-  val(const char* const data) noexcept
-    : val{data, std::strlen(data)} {}
-
-  /**
-   * Constructor.
-   */
-  val(const char* const data,
-      const std::size_t size) noexcept
-    : _val{size, const_cast<char*>(data)} {}
-
-  /**
-   * Destructor.
-   */
-  ~val() noexcept = default;
-
-  /**
-   * Returns an `MDB_val*` pointer.
-   */
-  operator MDB_val*() noexcept {
-    return &_val;
-  }
-
-  /**
-   * Returns an `MDB_val*` pointer.
-   */
-  operator const MDB_val*() const noexcept {
-    return &_val;
-  }
-};
-
-static_assert(std::is_pod<lmdb::val>::value, "lmdb::val must be a POD type");
-static_assert(sizeof(lmdb::val) == sizeof(MDB_val), "sizeof(lmdb::val) != sizeof(MDB_val)");
 
 ////////////////////////////////////////////////////////////////////////////////
 
