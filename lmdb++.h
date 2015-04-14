@@ -635,6 +635,7 @@ namespace lmdb {
 /**
  * Wrapper class for `MDB_val` structures.
  *
+ * @note Instances of this class are movable and copyable both.
  * @see http://symas.com/mdb/doc/group__mdb.html#structMDB__val
  */
 class lmdb::val {
@@ -665,6 +666,16 @@ public:
   val(const char* const data,
       const std::size_t size) noexcept
     : _val{size, const_cast<char*>(data)} {}
+
+  /**
+   * Move constructor.
+   */
+  val(val&& other) noexcept = default;
+
+  /**
+   * Move assignment operator.
+   */
+  val& operator=(val&& other) noexcept = default;
 
   /**
    * Destructor.
@@ -761,6 +772,7 @@ namespace lmdb {
 /**
  * Resource class for `MDB_env*` handles.
  *
+ * @note Instances of this class are movable, but not copyable.
  * @see http://symas.com/mdb/doc/group__internal.html#structMDB__env
  */
 class lmdb::env {
@@ -802,6 +814,23 @@ public:
    */
   env(MDB_env* const handle) noexcept
     : _handle{handle} {}
+
+  /**
+   * Move constructor.
+   */
+  env(env&& other) noexcept {
+    std::swap(_handle, other._handle);
+  }
+
+  /**
+   * Move assignment operator.
+   */
+  env& operator=(env&& other) noexcept {
+    if (this != &other) {
+      std::swap(_handle, other._handle);
+    }
+    return *this;
+  }
 
   /**
    * Destructor.
@@ -911,6 +940,7 @@ namespace lmdb {
 /**
  * Resource class for `MDB_txn*` handles.
  *
+ * @note Instances of this class are movable, but not copyable.
  * @see http://symas.com/mdb/doc/group__internal.html#structMDB__txn
  */
 class lmdb::txn {
@@ -946,6 +976,23 @@ public:
    */
   txn(MDB_txn* const handle) noexcept
     : _handle{handle} {}
+
+  /**
+   * Move constructor.
+   */
+  txn(txn&& other) noexcept {
+    std::swap(_handle, other._handle);
+  }
+
+  /**
+   * Move assignment operator.
+   */
+  txn& operator=(txn&& other) noexcept {
+    if (this != &other) {
+      std::swap(_handle, other._handle);
+    }
+    return *this;
+  }
 
   /**
    * Destructor.
@@ -1026,11 +1073,12 @@ namespace lmdb {
 /**
  * Resource class for `MDB_dbi` handles.
  *
+ * @note Instances of this class are movable, but not copyable.
  * @see http://symas.com/mdb/doc/group__mdb.html#gadbe68a06c448dfb62da16443d251a78b
  */
 class lmdb::dbi {
 protected:
-  const MDB_dbi _handle;
+  MDB_dbi _handle{0};
 
 public:
   static constexpr unsigned int default_flags     = 0;
@@ -1060,6 +1108,23 @@ public:
    */
   dbi(const MDB_dbi handle) noexcept
     : _handle{handle} {}
+
+  /**
+   * Move constructor.
+   */
+  dbi(dbi&& other) noexcept {
+    std::swap(_handle, other._handle);
+  }
+
+  /**
+   * Move assignment operator.
+   */
+  dbi& operator=(dbi&& other) noexcept {
+    if (this != &other) {
+      std::swap(_handle, other._handle);
+    }
+    return *this;
+  }
 
   /**
    * Destructor.
@@ -1217,6 +1282,7 @@ namespace lmdb {
 /**
  * Resource class for `MDB_cursor*` handles.
  *
+ * @note Instances of this class are movable, but not copyable.
  * @see http://symas.com/mdb/doc/group__internal.html#structMDB__cursor
  */
 class lmdb::cursor {
@@ -1251,6 +1317,23 @@ public:
    */
   cursor(MDB_cursor* const handle) noexcept
     : _handle{handle} {}
+
+  /**
+   * Move constructor.
+   */
+  cursor(cursor&& other) noexcept {
+    std::swap(_handle, other._handle);
+  }
+
+  /**
+   * Move assignment operator.
+   */
+  cursor& operator=(cursor&& other) noexcept {
+    if (this != &other) {
+      std::swap(_handle, other._handle);
+    }
+    return *this;
+  }
 
   /**
    * Destructor.
