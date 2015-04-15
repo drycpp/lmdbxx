@@ -399,8 +399,7 @@ namespace lmdb {
   // TODO: mdb_set_relctx()
   static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
   static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data, unsigned int flags);
-  // TODO: mdb_put()
-  // TODO: mdb_del()
+  static inline bool dbi_del(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
   // TODO: mdb_cmp()
   // TODO: mdb_dcmp()
 }
@@ -498,6 +497,21 @@ lmdb::dbi_put(MDB_txn* const txn,
   const int rc = ::mdb_put(txn, dbi, key, data, flags);
   if (rc != MDB_SUCCESS && rc != MDB_KEYEXIST) {
     error::raise("mdb_put", rc);
+  }
+  return (rc == MDB_SUCCESS);
+}
+
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#gab8182f9360ea69ac0afd4a4eaab1ddb0
+ */
+static inline bool
+lmdb::dbi_del(MDB_txn* const txn,
+              const MDB_dbi dbi,
+              MDB_val* const key,
+              MDB_val* const data = nullptr) {
+  const int rc = ::mdb_del(txn, dbi, key, data);
+  if (rc != MDB_SUCCESS && rc != MDB_NOTFOUND) {
+    error::raise("mdb_del", rc);
   }
   return (rc == MDB_SUCCESS);
 }
