@@ -392,7 +392,7 @@ namespace lmdb {
   static inline void dbi_stat(MDB_txn* txn, MDB_dbi dbi, MDB_stat* stat);
   static inline void dbi_flags(MDB_txn* txn, MDB_dbi dbi, unsigned int* flags);
   static inline void dbi_close(MDB_env* env, MDB_dbi dbi) noexcept;
-  // TODO: mdb_drop()
+  static inline void dbi_drop(MDB_txn* txn, MDB_dbi dbi, bool del);
   static inline void dbi_set_compare(MDB_txn* txn, MDB_dbi dbi, MDB_cmp_func* cmp);
   // TODO: mdb_set_dupsort()
   // TODO: mdb_set_relfunc()
@@ -454,6 +454,19 @@ static inline void
 lmdb::dbi_close(MDB_env* const env,
                 const MDB_dbi dbi) noexcept {
   ::mdb_dbi_close(env, dbi);
+}
+
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#gab966fab3840fc54a6571dfb32b00f2db
+ */
+static inline void
+lmdb::dbi_drop(MDB_txn* const txn,
+               const MDB_dbi dbi,
+               const bool del = false) {
+  const int rc = ::mdb_drop(txn, dbi, del ? 1 : 0);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_drop", rc);
+  }
 }
 
 /**
