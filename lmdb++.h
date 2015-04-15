@@ -471,6 +471,8 @@ lmdb::dbi_set_compare(MDB_txn* const txn,
 }
 
 /**
+ * @retval true  if the key/value pair was retrieved
+ * @retval false if the key wasn't found
  * @see http://symas.com/mdb/doc/group__mdb.html#ga8bf10cd91d3f3a83a34d04ce6b07992d
  */
 static inline bool
@@ -486,6 +488,8 @@ lmdb::dbi_get(MDB_txn* const txn,
 }
 
 /**
+ * @retval true  if the key/value pair was inserted
+ * @retval false if the key already existed
  * @see http://symas.com/mdb/doc/group__mdb.html#ga4fa8573d9236d54687c61827ebf8cac0
  */
 static inline bool
@@ -502,6 +506,8 @@ lmdb::dbi_put(MDB_txn* const txn,
 }
 
 /**
+ * @retval true  if the key/value pair was removed
+ * @retval false if the key wasn't found
  * @see http://symas.com/mdb/doc/group__mdb.html#gab8182f9360ea69ac0afd4a4eaab1ddb0
  */
 static inline bool
@@ -1326,6 +1332,22 @@ public:
     val.mv_size = sizeof(V);
     val.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&v));
     return lmdb::dbi_put(txn, handle(), &key, &val, flags);
+  }
+
+  /**
+   * Removes a key/value pair from this database.
+   *
+   * @param txn a transaction handle
+   * @param k
+   * @throws lmdb::error on failure
+   */
+  template<typename K>
+  bool del(MDB_txn* const txn,
+           const K& k) {
+    MDB_val key;
+    key.mv_size = sizeof(K);
+    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
+    return lmdb::dbi_del(txn, handle(), &key, nullptr);
   }
 };
 
