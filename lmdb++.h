@@ -1287,7 +1287,7 @@ namespace lmdb {
  */
 class lmdb::cursor {
 protected:
-  MDB_cursor* _handle;
+  MDB_cursor* _handle{nullptr};
 
 public:
   static constexpr unsigned int default_flags = 0;
