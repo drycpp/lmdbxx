@@ -1217,6 +1217,16 @@ public:
   }
 
   /**
+   * @param txn a transaction handle
+   * @param del
+   * @throws lmdb::error on failure
+   */
+  void drop(MDB_txn* const txn,
+            const bool del = false) {
+    lmdb::dbi_drop(txn, handle(), del);
+  }
+
+  /**
    * Sets a custom key comparison function for this database.
    *
    * @param txn a transaction handle
