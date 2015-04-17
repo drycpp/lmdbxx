@@ -50,6 +50,7 @@ namespace lmdb {
   class panic_error;
   class version_mismatch_error;
   class map_full_error;
+  class bad_dbi_error;
 }
 
 /**
@@ -184,6 +185,16 @@ public:
   using runtime_error::runtime_error;
 };
 
+/**
+ * Exception class for `MDB_BAD_DBI` errors.
+ *
+ * @see http://symas.com/mdb/doc/group__errors.html#gab4c82e050391b60a18a5df08d22a7083
+ */
+class lmdb::bad_dbi_error final : public lmdb::runtime_error {
+public:
+  using runtime_error::runtime_error;
+};
+
 inline void
 lmdb::error::raise(const char* const origin,
                    const int rc) {
@@ -194,6 +205,9 @@ lmdb::error::raise(const char* const origin,
     case MDB_PANIC:            throw panic_error{origin, rc};
     case MDB_VERSION_MISMATCH: throw version_mismatch_error{origin, rc};
     case MDB_MAP_FULL:         throw map_full_error{origin, rc};
+#ifdef MDB_BAD_DBI
+    case MDB_BAD_DBI:          throw bad_dbi_error{origin, rc};
+#endif
     default:                   throw lmdb::runtime_error{origin, rc};
   }
 }
