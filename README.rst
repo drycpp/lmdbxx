@@ -18,16 +18,6 @@ Features
 * 100% free and unencumbered `public domain <http://unlicense.org/>`_ software,
   usable in any context and for any purpose.
 
-======================== =======================================================
-C handle                 C++ wrapper class
-======================== =======================================================
-``MDB_env*``             ``lmdb::env``
-``MDB_txn*``             ``lmdb::txn``
-``MDB_dbi``              ``lmdb::dbi``
-``MDB_cursor*``          ``lmdb::cursor``
-``MDB_val``              ``lmdb::val``
-======================== =======================================================
-
 Error Handling
 --------------
 
@@ -74,6 +64,79 @@ Error code               Exception class                 Exception type
 .. note::
 
    ``MDB_KEYEXIST`` and ``MDB_NOTFOUND`` are handled specially by some functions.
+
+API Overview
+============
+
+============================ ===================================================
+C handle                     C++ wrapper class
+============================ ===================================================
+``MDB_env*``                 ``lmdb::env``
+``MDB_txn*``                 ``lmdb::txn``
+``MDB_dbi``                  ``lmdb::dbi``
+``MDB_cursor*``              ``lmdb::cursor``
+``MDB_val``                  ``lmdb::val``
+============================ ===================================================
+
+============================ ===================================================
+C function                   C++ wrapper function
+============================ ===================================================
+``mdb_version()``            N/A
+``mdb_strerror()``           N/A
+``mdb_env_create()``         ``lmdb::env_create()``
+``mdb_env_open()``           ``lmdb::env_open()``
+``mdb_env_copy()``           N/A
+``mdb_env_copyfd()``         N/A
+``mdb_env_copy2()``          N/A
+``mdb_env_copyfd2()``        N/A
+``mdb_env_stat()``           TODO
+``mdb_env_info()``           TODO
+``mdb_env_sync()``           ``lmdb::env_sync()``
+``mdb_env_close()``          ``lmdb::env_close()``
+``mdb_env_set_flags()``      ``lmdb::env_set_flags()``
+``mdb_env_get_flags()``      TODO
+``mdb_env_get_path()``       TODO
+``mdb_env_get_fd()``         TODO
+``mdb_env_set_mapsize()``    ``lmdb::env_set_map_size()``
+``mdb_env_set_maxreaders()`` ``lmdb::env_set_max_readers()``
+``mdb_env_get_maxreaders()`` TODO
+``mdb_env_set_maxdbs()``     ``lmdb::env_set_max_dbs()``
+``mdb_env_get_maxkeysize()`` TODO
+``mdb_env_set_userctx()``    TODO
+``mdb_env_get_userctx()``    TODO
+``mdb_env_set_assert()``     N/A
+``mdb_txn_begin()``          ``lmdb::txn_begin()``
+``mdb_txn_env()``            ``lmdb::txn_env()``
+``mdb_txn_commit()``         ``lmdb::txn_commit()``
+``mdb_txn_abort()``          ``lmdb::txn_abort()``
+``mdb_txn_reset()``          ``lmdb::txn_reset()``
+``mdb_txn_renew()``          ``lmdb::txn_renew()``
+``mdb_dbi_open()``           ``lmdb::dbi_open()``
+``mdb_stat()``               ``lmdb::dbi_stat()``
+``mdb_dbi_flags()``          ``lmdb::dbi_flags()``
+``mdb_dbi_close()``          ``lmdb::dbi_close()``
+``mdb_drop()``               ``lmdb::dbi_drop()``
+``mdb_set_compare()``        ``lmdb::dbi_set_compare()``
+``mdb_set_dupsort()``        ``lmdb::dbi_set_dupsort()``
+``mdb_set_relfunc()``        ``lmdb::dbi_set_relfunc()``
+``mdb_set_relctx()``         ``lmdb::dbi_set_relctx()``
+``mdb_get()``                ``lmdb::dbi_get()``
+``mdb_put()``                ``lmdb::dbi_put()``
+``mdb_del()``                ``lmdb::dbi_del()``
+``mdb_cursor_open()``        ``lmdb::cursor_open()``
+``mdb_cursor_close()``       ``lmdb::cursor_close()``
+``mdb_cursor_renew()``       ``lmdb::cursor_renew()``
+``mdb_cursor_txn()``         ``lmdb::cursor_txn()``
+``mdb_cursor_dbi()``         ``lmdb::cursor_dbi()``
+``mdb_cursor_get()``         ``lmdb::cursor_get()``
+``mdb_cursor_put()``         ``lmdb::cursor_put()``
+``mdb_cursor_del()``         ``lmdb::cursor_del()``
+``mdb_cursor_count()``       ``lmdb::cursor_count()``
+``mdb_cmp()``                N/A
+``mdb_dcmp()``               N/A
+``mdb_reader_list()``        TODO
+``mdb_reader_check()``       TODO
+============================ ===================================================
 
 Elsewhere
 =========
