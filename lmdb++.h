@@ -1070,7 +1070,7 @@ public:
    */
   ~txn() noexcept {
     if (_handle) {
-      // TODO
+      try { abort(); } catch (...) {}
       _handle = nullptr;
     }
   }
