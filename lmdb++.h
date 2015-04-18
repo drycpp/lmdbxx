@@ -433,7 +433,7 @@ namespace lmdb {
   static inline void dbi_drop(MDB_txn* txn, MDB_dbi dbi, bool del);
   static inline void dbi_set_compare(MDB_txn* txn, MDB_dbi dbi, MDB_cmp_func* cmp);
   static inline void dbi_set_dupsort(MDB_txn* txn, MDB_dbi dbi, MDB_cmp_func* cmp);
-  // TODO: mdb_set_relfunc()
+  static inline void dbi_set_relfunc(MDB_txn* txn, MDB_dbi dbi, MDB_rel_func* rel);
   // TODO: mdb_set_relctx()
   static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
   static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data, unsigned int flags);
@@ -532,6 +532,20 @@ lmdb::dbi_set_dupsort(MDB_txn* const txn,
   const int rc = ::mdb_set_dupsort(txn, dbi, cmp);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_set_dupsort", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga697d82c7afe79f142207ad5adcdebfeb
+ */
+static inline void
+lmdb::dbi_set_relfunc(MDB_txn* const txn,
+                      const MDB_dbi dbi,
+                      MDB_cmp_func* const cmp = nullptr) {
+  const int rc = ::mdb_set_relfunc(txn, dbi, cmp);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_set_relfunc", rc);
   }
 }
 
