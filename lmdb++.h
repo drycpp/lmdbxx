@@ -1448,6 +1448,7 @@ public:
    * Retrieves a key from this database.
    *
    * @param txn a transaction handle
+   * @param k
    * @throws lmdb::error on failure
    */
   template<typename K>
@@ -1508,6 +1509,7 @@ public:
    *
    * @param txn a transaction handle
    * @param k
+   * @param flags
    * @throws lmdb::error on failure
    */
   template<typename K>
@@ -1526,6 +1528,7 @@ public:
    * @param txn a transaction handle
    * @param k
    * @param v
+   * @param flags
    * @throws lmdb::error on failure
    */
   template<typename K, typename V>
@@ -1547,6 +1550,7 @@ public:
    * @param txn a transaction handle
    * @param k a NUL-terminated string key
    * @param v
+   * @param flags
    * @throws lmdb::error on failure
    */
   template<typename V>
