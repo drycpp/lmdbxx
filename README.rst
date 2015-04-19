@@ -112,8 +112,8 @@ C function                   C++ wrapper function
 ``mdb_env_get_maxreaders()`` ``lmdb::env_get_max_readers()``
 ``mdb_env_set_maxdbs()``     ``lmdb::env_set_max_dbs()``
 ``mdb_env_get_maxkeysize()`` ``lmdb::env_get_max_keysize()``
-``mdb_env_set_userctx()``    TODO
-``mdb_env_get_userctx()``    TODO
+``mdb_env_set_userctx()``    ``lmdb::env_set_userctx()`` [1]_
+``mdb_env_get_userctx()``    ``lmdb::env_get_userctx()`` [1]_
 ``mdb_env_set_assert()``     N/A
 ``mdb_txn_begin()``          ``lmdb::txn_begin()``
 ``mdb_txn_env()``            ``lmdb::txn_env()``
@@ -147,6 +147,10 @@ C function                   C++ wrapper function
 ``mdb_reader_list()``        TODO
 ``mdb_reader_check()``       TODO
 ============================ ===================================================
+
+.. rubric:: Footnotes
+
+.. [1] Available only since LMDB 0.9.11 (2014/01/15).
 
 Caveats
 -------

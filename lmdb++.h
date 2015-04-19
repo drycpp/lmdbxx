@@ -245,8 +245,10 @@ namespace lmdb {
   static inline void env_get_max_readers(MDB_env* env, unsigned int* count);
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
   static inline unsigned int env_get_max_keysize(MDB_env* env);
-  // TODO: mdb_env_set_userctx()
-  // TODO: mdb_env_get_userctx()
+#if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 11)
+  static inline void env_set_userctx(MDB_env* env, void* ctx);
+  static inline void* env_get_userctx(MDB_env* env);
+#endif
   // TODO: mdb_env_set_assert()
   // TODO: mdb_reader_list()
   // TODO: mdb_reader_check()
@@ -442,6 +444,31 @@ lmdb::env_get_max_keysize(MDB_env* const env) {
 #endif
   return static_cast<unsigned int>(rc);
 }
+
+#if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 11)
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaf2fe09eb9c96eeb915a76bf713eecc46
+ */
+static inline void
+lmdb::env_set_userctx(MDB_env* const env,
+                      void* const ctx) {
+  const int rc = ::mdb_env_set_userctx(env, ctx);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_set_userctx", rc);
+  }
+}
+#endif
+
+#if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 11)
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga45df6a4fb150cda2316b5ae224ba52f1
+ */
+static inline void*
+lmdb::env_get_userctx(MDB_env* const env) {
+  return ::mdb_env_get_userctx(env);
+}
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /* Procedural Interface: Transactions */
