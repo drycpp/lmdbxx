@@ -14,6 +14,7 @@ Features
 * Implements a straightforward mapping from C to C++, with consistent naming.
 * Simplifies error handling by translating error codes into C++ exceptions.
 * Carefully differentiates logic errors, runtime errors, and fatal errors.
+* Exception strings include the name of the LMDB function that failed.
 * Plays nice with others: all symbols are placed in the ``lmdb`` namespace.
 * 100% free and unencumbered `public domain <http://unlicense.org/>`_ software,
   usable in any context and for any purpose.
@@ -51,15 +52,18 @@ LMDB error conditions:
    ``std::runtime_error``. The standard exception class ``std::bad_alloc``,
    on the other hand, is a representative example of a fatal error.
 
-======================== =============================== =======================
-Error code               Exception class                 Exception type
-======================== =============================== =======================
-``MDB_KEYEXIST``         ``lmdb::key_exist_error``       ``lmdb::runtime_error``
-``MDB_NOTFOUND``         ``lmdb::not_found_error``       ``lmdb::runtime_error``
-``MDB_CORRUPTED``        ``lmdb::corrupted_error``       ``lmdb::fatal_error``
-``MDB_PANIC``            ``lmdb::panic_error``           ``lmdb::fatal_error``
-(others)                 ``lmdb::runtime_error``         ``lmdb::runtime_error``
-======================== =============================== =======================
+======================== ================================ ======================
+Error code               Exception class                  Exception type
+======================== ================================ ======================
+``MDB_KEYEXIST``         ``lmdb::key_exist_error``        runtime
+``MDB_NOTFOUND``         ``lmdb::not_found_error``        runtime
+``MDB_CORRUPTED``        ``lmdb::corrupted_error``        fatal
+``MDB_PANIC``            ``lmdb::panic_error``            fatal
+``MDB_VERSION_MISMATCH`` ``lmdb::version_mismatch_error`` fatal
+``MDB_MAP_FULL``         ``lmdb::map_full_error``         runtime
+``MDB_BAD_DBI``          ``lmdb::bad_dbi_error``          runtime
+(others)                 ``lmdb::runtime_error``          runtime
+======================== ================================ ======================
 
 .. note::
 
@@ -67,6 +71,9 @@ Error code               Exception class                 Exception type
 
 API Overview
 ============
+
+Resource Interface
+------------------
 
 ============================ ===================================================
 C handle                     C++ wrapper class
@@ -77,6 +84,9 @@ C handle                     C++ wrapper class
 ``MDB_cursor*``              ``lmdb::cursor``
 ``MDB_val``                  ``lmdb::val``
 ============================ ===================================================
+
+Procedural Interface
+--------------------
 
 ============================ ===================================================
 C function                   C++ wrapper function
@@ -137,6 +147,21 @@ C function                   C++ wrapper function
 ``mdb_reader_list()``        TODO
 ``mdb_reader_check()``       TODO
 ============================ ===================================================
+
+Caveats
+-------
+
+* The C++ procedural interface is more strictly grouped by handle type than
+  the LMDB native interface. For instance, ``mdb_put()`` is wrapped as the
+  C++ function ``lmdb::dbi_put()``, not ``lmdb::put()``. These differences--
+  a handful in number--all concern operations on ``MDB_dbi`` handles.
+
+* ``lmdb::dbi_put()`` does not throw an exception if LMDB returns the
+  ``MDB_KEYEXIST`` error code; it instead just returns ``false``.
+
+* ``lmdb::dbi_get()`, ``lmdb::dbi_del()``, and ``lmdb::cursor_get()`` do not
+  throw an exception if LMDB returns the ``MDB_NOTFOUND`` error code; they
+  instead just return ``false``.
 
 Elsewhere
 =========
