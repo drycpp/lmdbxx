@@ -232,6 +232,7 @@ namespace lmdb {
   // TODO: mdb_env_copy2()
   // TODO: mdb_env_copyfd2()
   static inline void env_stat(MDB_env* env, MDB_stat* stat);
+  static inline void env_info(MDB_env* env, MDB_envinfo* stat);
   // TODO: mdb_env_info()
   static inline void env_sync(MDB_env* env, bool force);
   static inline void env_close(MDB_env* env) noexcept;
@@ -286,6 +287,19 @@ lmdb::env_stat(MDB_env* const env,
   const int rc = ::mdb_env_stat(env, stat);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_stat", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga18769362c7e7d6cf91889a028a5c5947
+ */
+static inline void
+lmdb::env_info(MDB_env* const env,
+               MDB_envinfo* const stat) {
+  const int rc = ::mdb_env_info(env, stat);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_info", rc);
   }
 }
 
