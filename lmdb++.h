@@ -254,6 +254,7 @@ namespace lmdb {
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaad6be3d8dcd4ea01f8df436f41d158d4
  */
 static inline void
 lmdb::env_create(MDB_env** env) {
@@ -265,6 +266,7 @@ lmdb::env_create(MDB_env** env) {
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga32a193c6bf4d7d5c5d579e71f22e9340
  */
 static inline void
 lmdb::env_open(MDB_env* env,
@@ -305,6 +307,7 @@ lmdb::env_info(MDB_env* const env,
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga85e61f05aa68b520cc6c3b981dba5037
  */
 static inline void
 lmdb::env_sync(MDB_env* env,
@@ -325,6 +328,7 @@ lmdb::env_close(MDB_env* env) noexcept {
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga83f66cf02bfd42119451e9468dc58445
  */
 static inline void
 lmdb::env_set_flags(MDB_env* env,
@@ -338,6 +342,7 @@ lmdb::env_set_flags(MDB_env* env,
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaa2506ec8dab3d969b0e609cd82e619e5
  */
 static inline void
 lmdb::env_set_map_size(MDB_env* env,
@@ -350,6 +355,7 @@ lmdb::env_set_map_size(MDB_env* env,
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gae687966c24b790630be2a41573fe40e2
  */
 static inline void
 lmdb::env_set_max_readers(MDB_env* env,
@@ -362,6 +368,7 @@ lmdb::env_set_max_readers(MDB_env* env,
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaa2fc2f1f37cb1115e733b62cab2fcdbc
  */
 static inline void
 lmdb::env_set_max_dbs(MDB_env* env,
