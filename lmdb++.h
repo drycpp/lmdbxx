@@ -242,7 +242,7 @@ namespace lmdb {
   static inline void env_get_fd(MDB_env* env, mdb_filehandle_t* fd);
   static inline void env_set_map_size(MDB_env* env, std::size_t size);
   static inline void env_set_max_readers(MDB_env* env, unsigned int count);
-  // TODO: mdb_env_get_maxreaders()
+  static inline void env_get_max_readers(MDB_env* env, unsigned int* count);
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
   // TODO: mdb_env_get_maxkeysize()
   // TODO: mdb_env_set_userctx()
@@ -269,7 +269,7 @@ lmdb::env_create(MDB_env** env) {
  * @see http://symas.com/mdb/doc/group__mdb.html#ga32a193c6bf4d7d5c5d579e71f22e9340
  */
 static inline void
-lmdb::env_open(MDB_env* env,
+lmdb::env_open(MDB_env* const env,
                const char* const path,
                const unsigned int flags,
                const mode mode) {
@@ -310,7 +310,7 @@ lmdb::env_info(MDB_env* const env,
  * @see http://symas.com/mdb/doc/group__mdb.html#ga85e61f05aa68b520cc6c3b981dba5037
  */
 static inline void
-lmdb::env_sync(MDB_env* env,
+lmdb::env_sync(MDB_env* const env,
                const bool force = true) {
   const int rc = ::mdb_env_sync(env, force);
   if (rc != MDB_SUCCESS) {
@@ -322,7 +322,7 @@ lmdb::env_sync(MDB_env* env,
  * @see http://symas.com/mdb/doc/group__mdb.html#ga4366c43ada8874588b6a62fbda2d1e95
  */
 static inline void
-lmdb::env_close(MDB_env* env) noexcept {
+lmdb::env_close(MDB_env* const env) noexcept {
   ::mdb_env_close(env);
 }
 
@@ -331,7 +331,7 @@ lmdb::env_close(MDB_env* env) noexcept {
  * @see http://symas.com/mdb/doc/group__mdb.html#ga83f66cf02bfd42119451e9468dc58445
  */
 static inline void
-lmdb::env_set_flags(MDB_env* env,
+lmdb::env_set_flags(MDB_env* const env,
                     const unsigned int flags,
                     const bool onoff = true) {
   const int rc = ::mdb_env_set_flags(env, flags, onoff ? 1 : 0);
@@ -345,7 +345,7 @@ lmdb::env_set_flags(MDB_env* env,
  * @see http://symas.com/mdb/doc/group__mdb.html#ga2733aefc6f50beb49dd0c6eb19b067d9
  */
 static inline void
-lmdb::env_get_flags(MDB_env* env,
+lmdb::env_get_flags(MDB_env* const env,
                     unsigned int* const flags) {
   const int rc = ::mdb_env_get_flags(env, flags);
   if (rc != MDB_SUCCESS) {
@@ -358,7 +358,7 @@ lmdb::env_get_flags(MDB_env* env,
  * @see http://symas.com/mdb/doc/group__mdb.html#gac699fdd8c4f8013577cb933fb6a757fe
  */
 static inline void
-lmdb::env_get_path(MDB_env* env,
+lmdb::env_get_path(MDB_env* const env,
                    const char** path) {
   const int rc = ::mdb_env_get_path(env, path);
   if (rc != MDB_SUCCESS) {
@@ -371,7 +371,7 @@ lmdb::env_get_path(MDB_env* env,
  * @see http://symas.com/mdb/doc/group__mdb.html#gaf1570e7c0e5a5d860fef1032cec7d5f2
  */
 static inline void
-lmdb::env_get_fd(MDB_env* env,
+lmdb::env_get_fd(MDB_env* const env,
                  mdb_filehandle_t* const fd) {
   const int rc = ::mdb_env_get_fd(env, fd);
   if (rc != MDB_SUCCESS) {
@@ -384,7 +384,7 @@ lmdb::env_get_fd(MDB_env* env,
  * @see http://symas.com/mdb/doc/group__mdb.html#gaa2506ec8dab3d969b0e609cd82e619e5
  */
 static inline void
-lmdb::env_set_map_size(MDB_env* env,
+lmdb::env_set_map_size(MDB_env* const env,
                        const std::size_t size) {
   const int rc = ::mdb_env_set_mapsize(env, size);
   if (rc != MDB_SUCCESS) {
@@ -397,7 +397,7 @@ lmdb::env_set_map_size(MDB_env* env,
  * @see http://symas.com/mdb/doc/group__mdb.html#gae687966c24b790630be2a41573fe40e2
  */
 static inline void
-lmdb::env_set_max_readers(MDB_env* env,
+lmdb::env_set_max_readers(MDB_env* const env,
                           const unsigned int count) {
   const int rc = ::mdb_env_set_maxreaders(env, count);
   if (rc != MDB_SUCCESS) {
@@ -407,10 +407,23 @@ lmdb::env_set_max_readers(MDB_env* env,
 
 /**
  * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga70e143cf11760d869f754c9c9956e6cc
+ */
+static inline void
+lmdb::env_get_max_readers(MDB_env* const env,
+                          unsigned int* const count) {
+  const int rc = ::mdb_env_get_maxreaders(env, count);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_get_maxreaders", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
  * @see http://symas.com/mdb/doc/group__mdb.html#gaa2fc2f1f37cb1115e733b62cab2fcdbc
  */
 static inline void
-lmdb::env_set_max_dbs(MDB_env* env,
+lmdb::env_set_max_dbs(MDB_env* const env,
                       const MDB_dbi count) {
   const int rc = ::mdb_env_set_maxdbs(env, count);
   if (rc != MDB_SUCCESS) {
