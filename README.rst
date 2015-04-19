@@ -111,7 +111,7 @@ C function                   C++ wrapper function
 ``mdb_env_set_maxreaders()`` ``lmdb::env_set_max_readers()``
 ``mdb_env_get_maxreaders()`` ``lmdb::env_get_max_readers()``
 ``mdb_env_set_maxdbs()``     ``lmdb::env_set_max_dbs()``
-``mdb_env_get_maxkeysize()`` TODO
+``mdb_env_get_maxkeysize()`` ``lmdb::env_get_max_keysize()``
 ``mdb_env_set_userctx()``    TODO
 ``mdb_env_get_userctx()``    TODO
 ``mdb_env_set_assert()``     N/A
@@ -162,6 +162,10 @@ Caveats
 * ``lmdb::dbi_get()``, ``lmdb::dbi_del()``, and ``lmdb::cursor_get()`` do
   not throw an exception if LMDB returns the ``MDB_NOTFOUND`` error code;
   they instead just return ``false``.
+
+* ``lmdb::env_get_max_keysize()`` returns an unsigned integer, instead of a
+  signed integer as the underlying ``mdb_env_get_maxkeysize()`` function does.
+  This conversion is done since the return value cannot in fact be negative.
 
 Elsewhere
 =========

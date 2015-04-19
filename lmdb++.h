@@ -244,7 +244,7 @@ namespace lmdb {
   static inline void env_set_max_readers(MDB_env* env, unsigned int count);
   static inline void env_get_max_readers(MDB_env* env, unsigned int* count);
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
-  // TODO: mdb_env_get_maxkeysize()
+  static inline unsigned int env_get_max_keysize(MDB_env* env);
   // TODO: mdb_env_set_userctx()
   // TODO: mdb_env_get_userctx()
   // TODO: mdb_env_set_assert()
@@ -429,6 +429,18 @@ lmdb::env_set_max_dbs(MDB_env* const env,
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_maxdbs", rc);
   }
+}
+
+/**
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaaf0be004f33828bf2fb09d77eb3cef94
+ */
+static inline unsigned int
+lmdb::env_get_max_keysize(MDB_env* const env) {
+  const int rc = ::mdb_env_get_maxkeysize(env);
+#if 1
+  assert(rc >= 0);
+#endif
+  return static_cast<unsigned int>(rc);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
