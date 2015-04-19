@@ -231,7 +231,7 @@ namespace lmdb {
   // TODO: mdb_env_copyfd()
   // TODO: mdb_env_copy2()
   // TODO: mdb_env_copyfd2()
-  // TODO: mdb_env_stat()
+  static inline void env_stat(MDB_env* env, MDB_stat* stat);
   // TODO: mdb_env_info()
   static inline void env_sync(MDB_env* env, bool force);
   static inline void env_close(MDB_env* env) noexcept;
@@ -273,6 +273,19 @@ lmdb::env_open(MDB_env* env,
   const int rc = ::mdb_env_open(env, path, flags, mode);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_open", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#gaf881dca452050efbd434cd16e4bae255
+ */
+static inline void
+lmdb::env_stat(MDB_env* const env,
+               MDB_stat* const stat) {
+  const int rc = ::mdb_env_stat(env, stat);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_stat", rc);
   }
 }
 
@@ -542,8 +555,8 @@ lmdb::dbi_set_dupsort(MDB_txn* const txn,
 static inline void
 lmdb::dbi_set_relfunc(MDB_txn* const txn,
                       const MDB_dbi dbi,
-                      MDB_cmp_func* const cmp = nullptr) {
-  const int rc = ::mdb_set_relfunc(txn, dbi, cmp);
+                      MDB_rel_func* const rel) {
+  const int rc = ::mdb_set_relfunc(txn, dbi, rel);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_set_relfunc", rc);
   }
