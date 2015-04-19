@@ -237,7 +237,7 @@ namespace lmdb {
   static inline void env_sync(MDB_env* env, bool force);
   static inline void env_close(MDB_env* env) noexcept;
   static inline void env_set_flags(MDB_env* env, unsigned int flags, bool onoff);
-  // TODO: mdb_env_get_flags()
+  static inline void env_get_flags(MDB_env* env, unsigned int* flags);
   // TODO: mdb_env_get_path()
   // TODO: mdb_env_get_fd()
   static inline void env_set_map_size(MDB_env* env, std::size_t size);
@@ -337,6 +337,19 @@ lmdb::env_set_flags(MDB_env* env,
   const int rc = ::mdb_env_set_flags(env, flags, onoff ? 1 : 0);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_flags", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga2733aefc6f50beb49dd0c6eb19b067d9
+ */
+static inline void
+lmdb::env_get_flags(MDB_env* env,
+                    unsigned int* const flags) {
+  const int rc = ::mdb_env_get_flags(env, flags);
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_get_flags", rc);
   }
 }
 

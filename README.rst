@@ -99,12 +99,12 @@ C function                   C++ wrapper function
 ``mdb_env_copyfd()``         N/A
 ``mdb_env_copy2()``          N/A
 ``mdb_env_copyfd2()``        N/A
-``mdb_env_stat()``           TODO
-``mdb_env_info()``           TODO
+``mdb_env_stat()``           ``lmdb::env_stat()``
+``mdb_env_info()``           ``lmdb::env_info()``
 ``mdb_env_sync()``           ``lmdb::env_sync()``
 ``mdb_env_close()``          ``lmdb::env_close()``
 ``mdb_env_set_flags()``      ``lmdb::env_set_flags()``
-``mdb_env_get_flags()``      TODO
+``mdb_env_get_flags()``      ``lmdb::env_get_flags()``
 ``mdb_env_get_path()``       TODO
 ``mdb_env_get_fd()``         TODO
 ``mdb_env_set_mapsize()``    ``lmdb::env_set_map_size()``
