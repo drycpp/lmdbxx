@@ -105,7 +105,7 @@ C function                   C++ wrapper function
 ``mdb_env_close()``          ``lmdb::env_close()``
 ``mdb_env_set_flags()``      ``lmdb::env_set_flags()``
 ``mdb_env_get_flags()``      ``lmdb::env_get_flags()``
-``mdb_env_get_path()``       TODO
+``mdb_env_get_path()``       ``lmdb::env_get_path()``
 ``mdb_env_get_fd()``         TODO
 ``mdb_env_set_mapsize()``    ``lmdb::env_set_map_size()``
 ``mdb_env_set_maxreaders()`` ``lmdb::env_set_max_readers()``
