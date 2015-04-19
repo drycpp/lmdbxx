@@ -159,9 +159,9 @@ Caveats
 * ``lmdb::dbi_put()`` does not throw an exception if LMDB returns the
   ``MDB_KEYEXIST`` error code; it instead just returns ``false``.
 
-* ``lmdb::dbi_get()`, ``lmdb::dbi_del()``, and ``lmdb::cursor_get()`` do not
-  throw an exception if LMDB returns the ``MDB_NOTFOUND`` error code; they
-  instead just return ``false``.
+* ``lmdb::dbi_get()``, ``lmdb::dbi_del()``, and ``lmdb::cursor_get()`` do
+  not throw an exception if LMDB returns the ``MDB_NOTFOUND`` error code;
+  they instead just return ``false``.
 
 Elsewhere
 =========
