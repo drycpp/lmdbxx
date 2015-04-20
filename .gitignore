@@ -1,4 +1,6 @@
 .DS_Store
 .doxygen
-a.out
 *~
+a.out
+check
+test.o
