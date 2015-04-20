@@ -2,6 +2,10 @@
 lmdb++: C++11 wrapper for LMDB
 ******************************
 
+.. image:: https://api.travis-ci.org/bendiken/lmdbxx.svg?branch=master
+   :target: https://travis-ci.org/bendiken/lmdbxx
+   :alt: Travis CI build status
+
 This is a comprehensive C++ wrapper for the LMDB_ embedded database library.
 
 .. _LMDB: http://symas.com/mdb/
@@ -174,11 +178,12 @@ Caveats
 Elsewhere
 =========
 
-Find this project at: GitHub_, Bitbucket_, and SourceForge_.
+Find this project at: GitHub_, Bitbucket_, SourceForge_, and `Travis CI`_,
 
 .. _GitHub:      https://github.com/bendiken/lmdbxx
 .. _Bitbucket:   https://bitbucket.org/bendiken/lmdbxx
 .. _SourceForge: https://sourceforge.net/projects/lmdbxx/
+.. _Travis CI:   https://travis-ci.org/bendiken/lmdbxx
 
 Author
 ======
