@@ -19,7 +19,7 @@ default: help
 check: test.o
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD)
 
-%.o: %.cc
+%.o: %.cc lmdb++.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 install: lmdb++.h
