@@ -227,10 +227,13 @@ namespace lmdb {
   static inline void env_create(MDB_env** env);
   static inline void env_open(MDB_env* env,
     const char* path, unsigned int flags, mode mode);
-  // TODO: mdb_env_copy()
-  // TODO: mdb_env_copyfd()
-  // TODO: mdb_env_copy2()
-  // TODO: mdb_env_copyfd2()
+#if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 14)
+  static inline void env_copy(MDB_env* env, const char* path, unsigned int flags);
+  static inline void env_copy_fd(MDB_env* env, mdb_filehandle_t fd, unsigned int flags);
+#else
+  static inline void env_copy(MDB_env* env, const char* path);
+  static inline void env_copy_fd(MDB_env* env, mdb_filehandle_t fd);
+#endif
   static inline void env_stat(MDB_env* env, MDB_stat* stat);
   static inline void env_info(MDB_env* env, MDB_envinfo* stat);
   static inline void env_sync(MDB_env* env, bool force);
@@ -277,6 +280,46 @@ lmdb::env_open(MDB_env* const env,
   const int rc = ::mdb_env_open(env, path, flags, mode);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_open", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga3bf50d7793b36aaddf6b481a44e24244
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga5d51d6130325f7353db0955dbedbc378
+ */
+static inline void
+lmdb::env_copy(MDB_env* const env,
+#if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 14)
+               const char* const path,
+               const unsigned int flags = 0) {
+  const int rc = ::mdb_env_copy2(env, path, flags);
+#else
+               const char* const path) {
+  const int rc = ::mdb_env_copy(env, path);
+#endif
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_copy2", rc);
+  }
+}
+
+/**
+ * @throws lmdb::error on failure
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga5040d0de1f14000fa01fc0b522ff1f86
+ * @see http://symas.com/mdb/doc/group__mdb.html#ga470b0bcc64ac417de5de5930f20b1a28
+ */
+static inline void
+lmdb::env_copy_fd(MDB_env* const env,
+#if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 14)
+                 const mdb_filehandle_t fd,
+                 const unsigned int flags = 0) {
+  const int rc = ::mdb_env_copyfd2(env, fd, flags);
+#else
+                 const mdb_filehandle_t fd) {
+  const int rc = ::mdb_env_copyfd(env, fd);
+#endif
+  if (rc != MDB_SUCCESS) {
+    error::raise("mdb_env_copyfd2", rc);
   }
 }
 
