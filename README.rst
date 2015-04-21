@@ -16,7 +16,7 @@ resource interface with RAII_ semantics.
 Example
 =======
 
-Here follows a simple motivating example demonstrating basic use of the
+Here follows a simple motivating example_ demonstrating basic use of the
 object-oriented resource interface::
 
    #include <cstdio>
@@ -51,6 +51,20 @@ object-oriented resource interface::
      return EXIT_SUCCESS;
    }
 
+Should any operation in the above fail, an ``lmdb::error`` exception will be
+thrown and terminate the program since we don't specify an exception handler.
+All resources will regardless get automatically cleaned up due to RAII
+semantics.
+
+.. note::
+
+   In order to run this example, you must first manually create the
+   ``./example.mdb`` directory. This is a basic characteristic of LMDB: the
+   given environment path must already exist, as LMDB will not attempt to
+   automatically create it.
+
+.. _example: https://github.com/bendiken/lmdbxx/blob/master/example.cc#L1
+
 Features
 ========
 
@@ -64,6 +78,21 @@ Features
 * Plays nice with others: all symbols are placed into the ``lmdb`` namespace.
 * 100% free and unencumbered `public domain <http://unlicense.org/>`_ software,
   usable in any context and for any purpose.
+
+Requirements
+============
+
+The ``<lmdb++.h>`` header file requires a C++11 compiler and standard library.
+Recent releases of Clang_ or GCC_ will work fine.
+
+In addition, for your application to build and run, the underlying
+``<lmdb.h>`` header file shipped with LMDB must be available in the
+preprocessor's include path, and you must link with the ``liblmdb`` native
+library. On Ubuntu Linux 14.04 and newer, these prerequisites can be
+satisfied by installing the ``liblmdb-dev`` package.
+
+.. _Clang: http://clang.llvm.org/
+.. _GCC:   http://gcc.gnu.org/
 
 Overview
 ========
@@ -100,10 +129,10 @@ Procedural Interface
 --------------------
 
 The low-level procedural interface wraps LMDB functions with error-checking
-code that will throw an instance of the corresponding C++ exception class in
+code that will throw an instance of a corresponding C++ exception class in
 case of failure. This interface doesn't offer any convenience overloads as
 does the resource interface; the parameter types are exactly the same as for
-the raw C interface offered by LMDB itself. The return type is generally
+the raw C interface offered by LMDB itself.  The return type is generally
 ``void`` for these functions since the wrapper eats the error code returned
 by the underlying C function, throwing an exception in case of failure and
 otherwise returning values in the same output parameters as the C interface.
@@ -249,6 +278,15 @@ Error code               Exception class                  Exception type
 .. note::
 
    ``MDB_KEYEXIST`` and ``MDB_NOTFOUND`` are handled specially by some functions.
+
+Support
+=======
+
+To report a bug or submit a patch for lmdb++, please file an issue in the
+`issue tracker on GitHub <https://github.com/bendiken/lmdbxx/issues>`__.
+
+Questions and discussions about LMDB itself should be directed to the
+`OpenLDAP mailing lists <http://www.openldap.org/lists/>`__.
 
 Elsewhere
 =========
