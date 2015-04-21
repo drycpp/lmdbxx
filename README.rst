@@ -6,6 +6,10 @@ lmdb++: a C++11 wrapper for LMDB
    :target: https://travis-ci.org/bendiken/lmdbxx
    :alt: Travis CI build status
 
+.. image:: https://scan.coverity.com/projects/4900/badge.svg
+   :target: https://scan.coverity.com/projects/4900
+   :alt: Coverity Scan build status
+
 This is a comprehensive C++ wrapper for the LMDB_ embedded database library,
 offering both an error-checked procedural interface and an object-oriented
 resource interface with RAII_ semantics.
@@ -291,12 +295,14 @@ Questions and discussions about LMDB itself should be directed to the
 Elsewhere
 =========
 
-Find this project at: GitHub_, Bitbucket_, SourceForge_, and `Travis CI`_.
+Find this project at: GitHub_, Bitbucket_, SourceForge_, `Travis CI`_, and
+`Coverity Scan`_.
 
-.. _GitHub:      https://github.com/bendiken/lmdbxx
-.. _Bitbucket:   https://bitbucket.org/bendiken/lmdbxx
-.. _SourceForge: https://sourceforge.net/projects/lmdbxx/
-.. _Travis CI:   https://travis-ci.org/bendiken/lmdbxx
+.. _GitHub:        https://github.com/bendiken/lmdbxx
+.. _Bitbucket:     https://bitbucket.org/bendiken/lmdbxx
+.. _SourceForge:   https://sourceforge.net/projects/lmdbxx/
+.. _Travis CI:     https://travis-ci.org/bendiken/lmdbxx
+.. _Coverity Scan: https://scan.coverity.com/projects/4900
 
 Author
 ======
