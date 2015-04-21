@@ -1490,36 +1490,34 @@ public:
    * Retrieves a key from this database.
    *
    * @param txn a transaction handle
-   * @param k
+   * @param key
    * @throws lmdb::error on failure
    */
   template<typename K>
   bool get(MDB_txn* const txn,
-           const K& k) const {
-    MDB_val key, val{};
-    key.mv_size = sizeof(K);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    return lmdb::dbi_get(txn, handle(), &key, &val);
+           const K& key) const {
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val v{};
+    return lmdb::dbi_get(txn, handle(), k, v);
   }
 
   /**
    * Retrieves a key/value pair from this database.
    *
    * @param txn a transaction handle
-   * @param k
-   * @param v
+   * @param key
+   * @param val
    * @throws lmdb::error on failure
    */
   template<typename K, typename V>
   bool get(MDB_txn* const txn,
-           const K& k,
-           V& v) const {
-    MDB_val key, val{};
-    key.mv_size = sizeof(K);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    const bool result = lmdb::dbi_get(txn, handle(), &key, &val);
+           const K& key,
+           V& val) const {
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val v{};
+    const bool result = lmdb::dbi_get(txn, handle(), k, v);
     if (result) {
-      v = *reinterpret_cast<const V*>(val.mv_data);
+      val = *v.data<const V>();
     }
     return result;
   }
@@ -1528,20 +1526,19 @@ public:
    * Retrieves a key/value pair from this database.
    *
    * @param txn a transaction handle
-   * @param k a NUL-terminated string key
-   * @param v
+   * @param key a NUL-terminated string key
+   * @param val
    * @throws lmdb::error on failure
    */
   template<typename V>
   bool get(MDB_txn* const txn,
-           const char* const k,
-           V& v) const {
-    MDB_val key, val{};
-    key.mv_size = std::strlen(k);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(k));
-    const bool result = lmdb::dbi_get(txn, handle(), &key, &val);
+           const char* const key,
+           V& val) const {
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(key)), std::strlen(key)};
+    lmdb::val v{};
+    const bool result = lmdb::dbi_get(txn, handle(), k, v);
     if (result) {
-      v = *reinterpret_cast<const V*>(val.mv_data);
+      val = *v.data<const V>();
     }
     return result;
   }
@@ -1550,78 +1547,69 @@ public:
    * Stores a key into this database.
    *
    * @param txn a transaction handle
-   * @param k
+   * @param key
    * @param flags
    * @throws lmdb::error on failure
    */
   template<typename K>
   bool put(MDB_txn* const txn,
-           const K& k,
+           const K& key,
            const unsigned int flags = default_put_flags) {
-    MDB_val key, val{};
-    key.mv_size = sizeof(K);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    return lmdb::dbi_put(txn, handle(), &key, &val, flags);
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val v{};
+    return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
 
   /**
    * Stores a key/value pair into this database.
    *
    * @param txn a transaction handle
-   * @param k
-   * @param v
+   * @param key
+   * @param val
    * @param flags
    * @throws lmdb::error on failure
    */
   template<typename K, typename V>
   bool put(MDB_txn* const txn,
-           const K& k,
-           const V& v,
+           const K& key,
+           const V& val,
            const unsigned int flags = default_put_flags) {
-    MDB_val key, val;
-    key.mv_size = sizeof(K);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    val.mv_size = sizeof(V);
-    val.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&v));
-    return lmdb::dbi_put(txn, handle(), &key, &val, flags);
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val v{const_cast<void*>(reinterpret_cast<const void*>(&val)), sizeof(V)};
+    return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
 
   /**
    * Stores a key/value pair into this database.
    *
    * @param txn a transaction handle
-   * @param k a NUL-terminated string key
-   * @param v
+   * @param key a NUL-terminated string key
+   * @param val
    * @param flags
    * @throws lmdb::error on failure
    */
   template<typename V>
   bool put(MDB_txn* const txn,
-           const char* const k,
-           const V& v,
+           const char* const key,
+           const V& val,
            const unsigned int flags = default_put_flags) {
-    MDB_val key, val;
-    key.mv_size = std::strlen(k);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(k));
-    val.mv_size = sizeof(V);
-    val.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&v));
-    return lmdb::dbi_put(txn, handle(), &key, &val, flags);
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(key)), std::strlen(key)};
+    lmdb::val v{const_cast<void*>(reinterpret_cast<const void*>(&val)), sizeof(V)};
+    return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
 
   /**
    * Removes a key/value pair from this database.
    *
    * @param txn a transaction handle
-   * @param k
+   * @param key
    * @throws lmdb::error on failure
    */
   template<typename K>
   bool del(MDB_txn* const txn,
-           const K& k) {
-    MDB_val key;
-    key.mv_size = sizeof(K);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    return lmdb::dbi_del(txn, handle(), &key, nullptr);
+           const K& key) {
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    return lmdb::dbi_del(txn, handle(), k, nullptr);
   }
 };
 
@@ -1821,17 +1809,15 @@ public:
   /**
    * Positions this cursor at the given key.
    *
-   * @param k
+   * @param key
    * @param op
    * @throws lmdb::error on failure
    */
   template<typename K>
-  bool find(const K& k,
+  bool find(const K& key,
             const MDB_cursor_op op = MDB_SET) {
-    MDB_val key;
-    key.mv_size = sizeof(K);
-    key.mv_data = const_cast<void*>(reinterpret_cast<const void*>(&k));
-    return get(&key, nullptr, op);
+    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    return get(k, nullptr, op);
   }
 };
 
