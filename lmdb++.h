@@ -242,7 +242,7 @@ namespace lmdb {
   static inline void env_get_flags(MDB_env* env, unsigned int* flags);
   static inline void env_get_path(MDB_env* env, const char** path);
   static inline void env_get_fd(MDB_env* env, mdb_filehandle_t* fd);
-  static inline void env_set_map_size(MDB_env* env, std::size_t size);
+  static inline void env_set_mapsize(MDB_env* env, std::size_t size);
   static inline void env_set_max_readers(MDB_env* env, unsigned int count);
   static inline void env_get_max_readers(MDB_env* env, unsigned int* count);
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
@@ -428,8 +428,8 @@ lmdb::env_get_fd(MDB_env* const env,
  * @see http://symas.com/mdb/doc/group__mdb.html#gaa2506ec8dab3d969b0e609cd82e619e5
  */
 static inline void
-lmdb::env_set_map_size(MDB_env* const env,
-                       const std::size_t size) {
+lmdb::env_set_mapsize(MDB_env* const env,
+                      const std::size_t size) {
   const int rc = ::mdb_env_set_mapsize(env, size);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_mapsize", rc);
@@ -1186,8 +1186,8 @@ public:
    * @param size
    * @throws lmdb::error on failure
    */
-  env& set_map_size(const std::size_t size) {
-    lmdb::env_set_map_size(handle(), size);
+  env& set_mapsize(const std::size_t size) {
+    lmdb::env_set_mapsize(handle(), size);
     return *this;
   }
 
