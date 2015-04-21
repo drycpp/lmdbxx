@@ -1759,17 +1759,63 @@ public:
   }
 
   /**
+   * Retrieves a key from the database.
+   *
+   * @param key
+   * @param op
+   * @throws lmdb::error on failure
+   */
+  bool get(lmdb::val& key,
+           const MDB_cursor_op op) {
+    return get(key, nullptr, op);
+  }
+
+  /**
    * Retrieves a key/value pair from the database.
    *
    * @param key
-   * @param data (may be `nullptr`)
+   * @param val (may be `nullptr`)
    * @param op
    * @throws lmdb::error on failure
    */
   bool get(MDB_val* const key,
-           MDB_val* const data,
+           MDB_val* const val,
            const MDB_cursor_op op) {
-    return lmdb::cursor_get(handle(), key, data, op);
+    return lmdb::cursor_get(handle(), key, val, op);
+  }
+
+  /**
+   * Retrieves a key/value pair from the database.
+   *
+   * @param key
+   * @param val
+   * @param op
+   * @throws lmdb::error on failure
+   */
+  bool get(lmdb::val& key,
+           lmdb::val& val,
+           const MDB_cursor_op op) {
+    return lmdb::cursor_get(handle(), key, val, op);
+  }
+
+  /**
+   * Retrieves a key/value pair from the database.
+   *
+   * @param key
+   * @param val
+   * @param op
+   * @throws lmdb::error on failure
+   */
+  bool get(std::string& key,
+           std::string& val,
+           const MDB_cursor_op op) {
+    lmdb::val k{}, v{};
+    const bool found = get(k, v, op);
+    if (found) {
+      key.assign(k.data(), k.size());
+      val.assign(v.data(), v.size());
+    }
+    return found;
   }
 
   /**
