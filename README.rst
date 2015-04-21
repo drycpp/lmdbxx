@@ -72,7 +72,7 @@ This wrapper offers both an error-checked procedural interface and an
 object-oriented resource interface with RAII semantics. The former will be
 useful for easily retrofitting existing projects that currently use the raw
 C interface, but we recommend the latter for all new projects due to the
-exception safety afforded by the RAII semantics.
+exception safety afforded by RAII semantics.
 
 Resource Interface
 ------------------
@@ -103,11 +103,14 @@ The low-level procedural interface wraps LMDB functions with error-checking
 code that will throw an instance of the corresponding C++ exception class in
 case of failure. This interface doesn't offer any convenience overloads as
 does the resource interface; the parameter types are exactly the same as for
-the raw C interface offered by LMDB itself.
+the raw C interface offered by LMDB itself. The return type is generally
+``void`` for these functions since the wrapper eats the error code returned
+by the underlying C function, throwing an exception in case of failure and
+otherwise returning values in the same output parameters as the C interface.
 
 This interface is implemented entirely using static inline functions, so
 there are no hidden extra costs to using these wrapper functions so long as
-you have a compiler capable of basic optimizations.
+you have a decent compiler capable of basic inlining optimization.
 
 ============================ ===================================================
 C function                   C++ wrapper function
