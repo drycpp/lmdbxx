@@ -1,11 +1,10 @@
 /* This is free and unencumbered software released into the public domain. */
 
-#include "lmdb++.h"
+#include <cstdio>   /* for std::*printf() */
+#include <cstdlib>  /* for EXIT_SUCCESS */
+#include <lmdb++.h>
 
-#include <cstdlib> /* for EXIT_SUCCESS */
-
-int
-main(void) {
+int main() {
   /* Create the LMDB environment: */
   auto env = lmdb::env::create();
 

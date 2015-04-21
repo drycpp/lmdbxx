@@ -1,7 +1,7 @@
 DESTDIR  :=
 PREFIX   := /usr/local
 
-CPPFLAGS :=
+CPPFLAGS := -I.
 CXXFLAGS := -g -O0 -std=c++11 -Wall -Werror
 LDFLAGS  :=
 LDADD    := -llmdb
@@ -16,8 +16,11 @@ INSTALL_HEADER = $(INSTALL_DATA)
 
 default: help
 
-check: test.o
-	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD)
+check: check.o
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD) && ./$@
+
+example: example.o
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD) && ./$@
 
 %.o: %.cc lmdb++.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
@@ -29,9 +32,9 @@ uninstall:
 	$(RM) $(DESTDIR)$(includedir)/lmdb++.h
 
 clean:
-	$(RM) check *.o *~
+	$(RM) check example *.o *~
 
 help:
 	@echo 'Install the <lmdb++.h> header file using `make install`.'
 
-.PHONY: install uninstall clean help
+.PHONY: check example install uninstall clean help

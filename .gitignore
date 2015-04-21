@@ -1,6 +1,8 @@
 .DS_Store
 .doxygen
 *~
+*.o
 a.out
 check
-test.o
+example
+example.mdb
