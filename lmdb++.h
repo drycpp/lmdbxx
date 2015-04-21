@@ -1599,6 +1599,24 @@ public:
   }
 
   /**
+   * Stores a key/value pair into this database.
+   *
+   * @param txn a transaction handle
+   * @param key a NUL-terminated string key
+   * @param val a NUL-terminated string key
+   * @param flags
+   * @throws lmdb::error on failure
+   */
+  bool put(MDB_txn* const txn,
+           const char* const key,
+           const char* const val,
+           const unsigned int flags = default_put_flags) {
+    lmdb::val k{key, std::strlen(key)};
+    lmdb::val v{val, std::strlen(val)};
+    return lmdb::dbi_put(txn, handle(), k, v, flags);
+  }
+
+  /**
    * Removes a key/value pair from this database.
    *
    * @param txn a transaction handle
