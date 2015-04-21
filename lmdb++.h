@@ -22,7 +22,7 @@
 
 #include <lmdb.h>      /* for MDB_*, mdb_*() */
 
-#if 1
+#ifdef LMDBXX_DEBUG
 #include <cassert>     /* for assert() */
 #endif
 #include <cstddef>     /* for std::size_t */
@@ -233,7 +233,6 @@ namespace lmdb {
   // TODO: mdb_env_copyfd2()
   static inline void env_stat(MDB_env* env, MDB_stat* stat);
   static inline void env_info(MDB_env* env, MDB_envinfo* stat);
-  // TODO: mdb_env_info()
   static inline void env_sync(MDB_env* env, bool force);
   static inline void env_close(MDB_env* env) noexcept;
   static inline void env_set_flags(MDB_env* env, unsigned int flags, bool onoff);
@@ -439,7 +438,7 @@ lmdb::env_set_max_dbs(MDB_env* const env,
 static inline unsigned int
 lmdb::env_get_max_keysize(MDB_env* const env) {
   const int rc = ::mdb_env_get_maxkeysize(env);
-#if 1
+#ifdef LMDBXX_DEBUG
   assert(rc >= 0);
 #endif
   return static_cast<unsigned int>(rc);
@@ -1030,7 +1029,7 @@ public:
   static env create(const unsigned int flags = default_flags) {
     MDB_env* handle{nullptr};
     lmdb::env_create(&handle);
-#if 1
+#ifdef LMDBXX_DEBUG
     assert(handle != nullptr);
 #endif
     if (flags) {
@@ -1201,7 +1200,7 @@ public:
                    const unsigned int flags = default_flags) {
     MDB_txn* handle{nullptr};
     lmdb::txn_begin(env, parent, flags, &handle);
-#if 1
+#ifdef LMDBXX_DEBUG
     assert(handle != nullptr);
 #endif
     return txn{handle};
@@ -1615,7 +1614,7 @@ public:
        const MDB_dbi dbi) {
     MDB_cursor* handle{};
     lmdb::cursor_open(txn, dbi, &handle);
-#if 1
+#ifdef LMDBXX_DEBUG
     assert(handle != nullptr);
 #endif
     return cursor{handle};
