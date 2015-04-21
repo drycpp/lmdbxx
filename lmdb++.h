@@ -1496,7 +1496,7 @@ public:
   template<typename K>
   bool get(MDB_txn* const txn,
            const K& key) const {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_get(txn, handle(), k, v);
   }
@@ -1513,7 +1513,7 @@ public:
   bool get(MDB_txn* const txn,
            const K& key,
            V& val) const {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     const bool result = lmdb::dbi_get(txn, handle(), k, v);
     if (result) {
@@ -1534,7 +1534,7 @@ public:
   bool get(MDB_txn* const txn,
            const char* const key,
            V& val) const {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(key)), std::strlen(key)};
+    lmdb::val k{key, std::strlen(key)};
     lmdb::val v{};
     const bool result = lmdb::dbi_get(txn, handle(), k, v);
     if (result) {
@@ -1555,7 +1555,7 @@ public:
   bool put(MDB_txn* const txn,
            const K& key,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
@@ -1574,8 +1574,8 @@ public:
            const K& key,
            const V& val,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
-    lmdb::val v{const_cast<void*>(reinterpret_cast<const void*>(&val)), sizeof(V)};
+    lmdb::val k{&key, sizeof(K)};
+    lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
 
@@ -1593,8 +1593,8 @@ public:
            const char* const key,
            const V& val,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(key)), std::strlen(key)};
-    lmdb::val v{const_cast<void*>(reinterpret_cast<const void*>(&val)), sizeof(V)};
+    lmdb::val k{key, std::strlen(key)};
+    lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
 
@@ -1608,7 +1608,7 @@ public:
   template<typename K>
   bool del(MDB_txn* const txn,
            const K& key) {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val k{&key, sizeof(K)};
     return lmdb::dbi_del(txn, handle(), k, nullptr);
   }
 };
@@ -1816,7 +1816,7 @@ public:
   template<typename K>
   bool find(const K& key,
             const MDB_cursor_op op = MDB_SET) {
-    lmdb::val k{const_cast<void*>(reinterpret_cast<const void*>(&key)), sizeof(K)};
+    lmdb::val k{&key, sizeof(K)};
     return get(k, nullptr, op);
   }
 };
