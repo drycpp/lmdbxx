@@ -295,11 +295,12 @@ Questions and discussions about LMDB itself should be directed to the
 Elsewhere
 =========
 
-Find this project at: GitHub_, Bitbucket_, SourceForge_, `Travis CI`_, and
-`Coverity Scan`_.
+Find this project at: GitHub_, Bitbucket_, `Open Hub`_, SourceForge_,
+`Travis CI`_, and `Coverity Scan`_.
 
 .. _GitHub:        https://github.com/bendiken/lmdbxx
 .. _Bitbucket:     https://bitbucket.org/bendiken/lmdbxx
+.. _Open Hub:      https://www.openhub.net/p/lmdbxx
 .. _SourceForge:   https://sourceforge.net/projects/lmdbxx/
 .. _Travis CI:     https://travis-ci.org/bendiken/lmdbxx
 .. _Coverity Scan: https://scan.coverity.com/projects/4900
