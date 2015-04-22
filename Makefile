@@ -37,9 +37,6 @@ uninstall:
 clean:
 	$(RM) README.html README.md check example *.o *~
 
-doxygen: README.md
-	doxygen Doxyfile
-
 README: README.html README.md
 
 README.html: README.rst
@@ -48,4 +45,10 @@ README.html: README.rst
 README.md: README.rst
 	pandoc -s -f rst -t markdown_github -o - $< | tail -n +5 > $@
 
-.PHONY: help check example install uninstall clean doxygen
+doxygen: README.md
+	doxygen Doxyfile
+
+maintainer-doxygen: doxygen
+	rsync -az .doxygen/html/ bendiken@web.sourceforge.net:/home/project-web/lmdbxx/htdocs/
+
+.PHONY: help check example install uninstall clean doxygen maintainer-doxygen
