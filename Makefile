@@ -32,9 +32,17 @@ uninstall:
 	$(RM) $(DESTDIR)$(includedir)/lmdb++.h
 
 clean:
-	$(RM) check example *.o *~
+	$(RM) README.html README.md check example *.o *~
 
 help:
 	@echo 'Install the <lmdb++.h> header file using `make install`.'
+
+README: README.html README.md
+
+README.html: README.rst
+	pandoc -s -f rst -t html5 -S -o $@ $<
+
+README.md: README.rst
+	pandoc -s -f rst -t markdown_github -o $@ $<
 
 .PHONY: check example install uninstall clean help
