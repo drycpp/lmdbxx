@@ -43,6 +43,6 @@ README.html: README.rst
 	pandoc -s -f rst -t html5 -S -o $@ $<
 
 README.md: README.rst
-	pandoc -s -f rst -t markdown_github -o $@ $<
+	pandoc -s -f rst -t markdown_github -o - $< | tail -n +5 > $@
 
 .PHONY: check example install uninstall clean help
