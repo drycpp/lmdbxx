@@ -305,6 +305,8 @@ Find this project at: GitHub_, Bitbucket_, `Open Hub`_, SourceForge_,
 .. _Travis CI:     https://travis-ci.org/bendiken/lmdbxx
 .. _Coverity Scan: https://scan.coverity.com/projects/4900
 
+The API documentation is published at: http://lmdbxx.sourceforge.net/
+
 Author
 ======
 
