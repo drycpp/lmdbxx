@@ -1,3 +1,13 @@
+# Makefile for lmdb++ <http://lmdbxx.sourceforge.net/>
+
+PACKAGE_NAME      := lmdb++
+PACKAGE_TARNAME   := lmdbxx
+PACKAGE_VERSION    = $(shell cat VERSION)
+PACKAGE_STRING     = $(PACKAGE_NAME) $(PACKAGE_TARNAME)
+PACKAGE_TARSTRING  = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
+PACKAGE_BUGREPORT := arto@bendiken.net
+PACKAGE_URL       := http://lmdbxx.sourceforge.net/
+
 DESTDIR  :=
 PREFIX   := /usr/local
 
@@ -14,6 +24,9 @@ INSTALL       := install -c
 INSTALL_DATA   = $(INSTALL) -m 644
 INSTALL_HEADER = $(INSTALL_DATA)
 
+DISTFILES := AUTHORS CREDITS INSTALL README TODO UNLICENSE VERSION \
+             Makefile check.cc example.cc lmdb++.h
+
 default: help
 
 help:
@@ -28,8 +41,11 @@ example: example.o
 %.o: %.cc lmdb++.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-install: lmdb++.h
-	$(INSTALL_HEADER) $^ $(DESTDIR)$(includedir)
+installdirs:
+	$(MKDIR) $(DESTDIR)$(includedir)
+
+install: lmdb++.h installdirs
+	$(INSTALL_HEADER) $< $(DESTDIR)$(includedir)
 
 uninstall:
 	$(RM) $(DESTDIR)$(includedir)/lmdb++.h
@@ -47,9 +63,21 @@ README.md: README.rst
 
 doxygen: README.md
 	doxygen Doxyfile
-	sed -e 's/Main Page/a C++11 wrapper for LMDB/' -e 's/lmdb++ Documentation/lmdb++: a C++11 wrapper for LMDB/' -i .orig .doxygen/html/index.html
+	sed -e 's/Main Page/a C++11 wrapper for LMDB/'                    \
+	    -e 's/lmdb++ Documentation/lmdb++: a C++11 wrapper for LMDB/' \
+	    -i.orig .doxygen/html/index.html
+
+maintainer-clean: clean
 
 maintainer-doxygen: doxygen
 	rsync -az .doxygen/html/ bendiken@web.sourceforge.net:/home/project-web/lmdbxx/htdocs/
 
-.PHONY: help check example install uninstall clean doxygen maintainer-doxygen
+dist:
+	tar -chJf $(PACKAGE_TARSTRING).tar.xz \
+	    --transform 's,^,$(PACKAGE_TARSTRING)/,' $(DISTFILES)
+	tar -chjf $(PACKAGE_TARSTRING).tar.bz2 \
+	    --transform 's,^,$(PACKAGE_TARSTRING)/,' $(DISTFILES)
+	tar -chzf $(PACKAGE_TARSTRING).tar.gz \
+	    --transform 's,^,$(PACKAGE_TARSTRING)/,' $(DISTFILES)
+
+.PHONY: help check example installdirs install uninstall clean doxygen maintainer-doxygen dist
