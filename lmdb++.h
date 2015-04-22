@@ -188,6 +188,7 @@ public:
 /**
  * Exception class for `MDB_BAD_DBI` errors.
  *
+ * @since 0.9.14 (2014/09/20)
  * @see http://symas.com/mdb/doc/group__errors.html#gab4c82e050391b60a18a5df08d22a7083
  */
 class lmdb::bad_dbi_error final : public lmdb::runtime_error {
@@ -490,6 +491,7 @@ lmdb::env_get_max_keysize(MDB_env* const env) {
 #if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 11)
 /**
  * @throws lmdb::error on failure
+ * @since 0.9.11 (2014/01/15)
  * @see http://symas.com/mdb/doc/group__mdb.html#gaf2fe09eb9c96eeb915a76bf713eecc46
  */
 static inline void
@@ -504,6 +506,7 @@ lmdb::env_set_userctx(MDB_env* const env,
 
 #if MDB_VERSION_FULL >= MDB_VERINT(0, 9, 11)
 /**
+ * @since 0.9.11 (2014/01/15)
  * @see http://symas.com/mdb/doc/group__mdb.html#ga45df6a4fb150cda2316b5ae224ba52f1
  */
 static inline void*

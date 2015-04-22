@@ -275,9 +275,13 @@ Error code               Exception class                  Exception type
 ``MDB_PANIC``            ``lmdb::panic_error``            fatal
 ``MDB_VERSION_MISMATCH`` ``lmdb::version_mismatch_error`` fatal
 ``MDB_MAP_FULL``         ``lmdb::map_full_error``         runtime
-``MDB_BAD_DBI``          ``lmdb::bad_dbi_error``          runtime
+``MDB_BAD_DBI``          ``lmdb::bad_dbi_error``          runtime           [1]_
 (others)                 ``lmdb::runtime_error``          runtime
 ======================== ================================ ======================
+
+.. rubric:: Footnotes
+
+.. [1] Available since LMDB 0.9.14 (2014/09/20).
 
 .. note::
 
