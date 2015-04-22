@@ -943,9 +943,9 @@ public:
   /**
    * Constructor.
    */
-  val(const char* const data,
+  val(const void* const data,
       const std::size_t size) noexcept
-    : _val{size, const_cast<char*>(data)} {}
+    : _val{size, const_cast<void*>(data)} {}
 
   /**
    * Move constructor.
