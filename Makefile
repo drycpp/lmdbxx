@@ -47,6 +47,7 @@ README.md: README.rst
 
 doxygen: README.md
 	doxygen Doxyfile
+	sed -e 's/Main Page/a C++11 wrapper for LMDB/' -i .orig .doxygen/html/index.html
 
 maintainer-doxygen: doxygen
 	rsync -az .doxygen/html/ bendiken@web.sourceforge.net:/home/project-web/lmdbxx/htdocs/
