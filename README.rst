@@ -283,6 +283,26 @@ Error code               Exception class                  Exception type
 
    ``MDB_KEYEXIST`` and ``MDB_NOTFOUND`` are handled specially by some functions.
 
+Versioning Policy
+-----------------
+
+The lmdb++ version tracks the upstream LMDB release (x.y.z) that it is
+compatible with, and appends a sub-patch-level version (x.y.z.N) to indicate
+changes to the wrapper itself.
+
+For example, an lmdb++ release of 0.9.14.2 would indicate that it is
+designed for compatibility with LMDB 0.9.14, and is the third wrapper
+release (the first being .0, and the second .1) for that upstream target.
+
+.. note::
+
+   To the extent that LMDB preserves API and ABI compatibility, older
+   versions of the wrapper should work with newer versions of LMDB; and
+   newer versions of the wrapper will generally work with older versions of
+   LMDB by using the preprocessor to conditionalize the visibility of newer
+   symbols--see, for example, the preprocessor guards around the definition
+   of ``lmdb::env_set_userctx()``.
+
 Support
 =======
 
