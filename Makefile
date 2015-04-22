@@ -16,6 +16,9 @@ INSTALL_HEADER = $(INSTALL_DATA)
 
 default: help
 
+help:
+	@echo 'Install the <lmdb++.h> header file using `make install`.'
+
 check: check.o
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD) && ./$@
 
@@ -34,8 +37,8 @@ uninstall:
 clean:
 	$(RM) README.html README.md check example *.o *~
 
-help:
-	@echo 'Install the <lmdb++.h> header file using `make install`.'
+doxygen: README.md
+	doxygen Doxyfile
 
 README: README.html README.md
 
@@ -45,4 +48,4 @@ README.html: README.rst
 README.md: README.rst
 	pandoc -s -f rst -t markdown_github -o - $< | tail -n +5 > $@
 
-.PHONY: check example install uninstall clean help
+.PHONY: help check example install uninstall clean doxygen
