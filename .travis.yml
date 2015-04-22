@@ -1,7 +1,6 @@
 # https://travis-ci.org/bendiken/lmdbxx
 language: cpp
 compiler:
-  - clang
   - gcc
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
