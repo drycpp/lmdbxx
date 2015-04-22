@@ -1039,8 +1039,10 @@ public:
   }
 };
 
+#ifndef __COVERITY__
 static_assert(std::is_pod<lmdb::val>::value, "lmdb::val must be a POD type");
 static_assert(sizeof(lmdb::val) == sizeof(MDB_val), "sizeof(lmdb::val) != sizeof(MDB_val)");
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /* Resource Interface: Environment */
