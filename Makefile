@@ -51,7 +51,7 @@ uninstall:
 	$(RM) $(DESTDIR)$(includedir)/lmdb++.h
 
 clean:
-	$(RM) README.html README.md check example *.o *~
+	$(RM) README.html README.md check example $(PACKAGE_TARSTRING).tar.* *.o *~
 
 README: README.html README.md
 
