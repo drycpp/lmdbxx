@@ -275,13 +275,13 @@ Error code               Exception class                  Exception type
 ``MDB_PANIC``            ``lmdb::panic_error``            fatal
 ``MDB_VERSION_MISMATCH`` ``lmdb::version_mismatch_error`` fatal
 ``MDB_MAP_FULL``         ``lmdb::map_full_error``         runtime
-``MDB_BAD_DBI``          ``lmdb::bad_dbi_error``          runtime           [1]_
+``MDB_BAD_DBI``          ``lmdb::bad_dbi_error``          runtime           [4]_
 (others)                 ``lmdb::runtime_error``          runtime
 ======================== ================================ ======================
 
 .. rubric:: Footnotes
 
-.. [1] Available since LMDB 0.9.14 (2014/09/20).
+.. [4] Available since LMDB 0.9.14 (2014/09/20).
 
 .. note::
 
@@ -300,12 +300,38 @@ release (the first being .0, and the second .1) for that upstream target.
 
 .. note::
 
-   To the extent that LMDB preserves API and ABI compatibility, older
-   versions of the wrapper should work with newer versions of LMDB; and
-   newer versions of the wrapper will generally work with older versions of
-   LMDB by using the preprocessor to conditionalize the visibility of newer
-   symbols--see, for example, the preprocessor guards around the definition
-   of ``lmdb::env_set_userctx()``.
+   To the extent that LMDB will preserve API and ABI compatibility going
+   forward, older versions of the wrapper should work with newer versions of
+   LMDB; and newer versions of the wrapper will generally work with older
+   versions of LMDB by using the preprocessor to conditionalize the
+   visibility of newer symbols--see, for example, the preprocessor guards
+   around the definition of ``lmdb::env_set_userctx()``.
+
+Installation
+============
+
+lmdb++ is currently available as a package/port in the following operating
+system distributions and package management systems:
+
+================= ============== ===============================================
+Distribution      Package Name   Installation Hint
+================= ============== ===============================================
+`Arch Linux AUR`_ liblmdb++      ``yaourt -Sa liblmdb++``
+Fink_ [5]_        lmdb++         ``sudo fink install lmdb++``
+MacPorts_         lmdbxx         ``sudo port install lmdbxx``
+Portage_ [6]_     lmdb++         ``sudo emerge --ask lmdb++``
+================= ============== ===============================================
+
+.. rubric:: Footnotes
+
+.. [5] Still pending review.
+
+.. [6] Compatible with Gentoo Linux, Funtoo Linux, and Sabayon Linux.
+
+.. _Arch Linux AUR: https://aur.archlinux.org/packages/liblmdb%2B%2B/
+.. _Fink:           https://sourceforge.net/p/fink/package-submissions/4487/
+.. _MacPorts:       https://www.macports.org/ports.php?by=name&substr=lmdbxx
+.. _Portage:        https://packages.gentoo.org/package/dev-db/lmdb++
 
 Support
 =======
