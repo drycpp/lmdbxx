@@ -521,7 +521,10 @@ lmdb::env_get_userctx(MDB_env* const env) {
 namespace lmdb {
   static inline void txn_begin(
     MDB_env* env, MDB_txn* parent, unsigned int flags, MDB_txn** txn);
-  static inline MDB_env* txn_env(MDB_txn* const txn) noexcept;
+  static inline MDB_env* txn_env(MDB_txn* txn) noexcept;
+#ifdef LMDBXX_TXN_ID
+  static inline std::size_t txn_id(MDB_txn* txn) noexcept;
+#endif
   static inline void txn_commit(MDB_txn* txn);
   static inline void txn_abort(MDB_txn* txn) noexcept;
   static inline void txn_reset(MDB_txn* txn) noexcept;
@@ -550,6 +553,16 @@ static inline MDB_env*
 lmdb::txn_env(MDB_txn* const txn) noexcept {
   return ::mdb_txn_env(txn);
 }
+
+#ifdef LMDBXX_TXN_ID
+/**
+ * @note Only available in HEAD, not yet in any 0.9.x release (as of 0.9.16).
+ */
+static inline std::size_t
+lmdb::txn_id(MDB_txn* const txn) noexcept {
+  return ::mdb_txn_id(txn);
+}
+#endif
 
 /**
  * @throws lmdb::error on failure

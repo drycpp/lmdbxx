@@ -175,22 +175,23 @@ C function                   C++ wrapper function
 ``mdb_env_set_assert()``     N/A
 ``mdb_txn_begin()``          ``lmdb::txn_begin()``
 ``mdb_txn_env()``            ``lmdb::txn_env()``
+``mdb_txn_id()``             ``lmdb::txn_id()``                             [3]_
 ``mdb_txn_commit()``         ``lmdb::txn_commit()``
 ``mdb_txn_abort()``          ``lmdb::txn_abort()``
 ``mdb_txn_reset()``          ``lmdb::txn_reset()``
 ``mdb_txn_renew()``          ``lmdb::txn_renew()``
 ``mdb_dbi_open()``           ``lmdb::dbi_open()``
-``mdb_stat()``               ``lmdb::dbi_stat()``                           [3]_
+``mdb_stat()``               ``lmdb::dbi_stat()``                           [4]_
 ``mdb_dbi_flags()``          ``lmdb::dbi_flags()``
 ``mdb_dbi_close()``          ``lmdb::dbi_close()``
-``mdb_drop()``               ``lmdb::dbi_drop()``                           [3]_
-``mdb_set_compare()``        ``lmdb::dbi_set_compare()``                    [3]_
-``mdb_set_dupsort()``        ``lmdb::dbi_set_dupsort()``                    [3]_
-``mdb_set_relfunc()``        ``lmdb::dbi_set_relfunc()``                    [3]_
-``mdb_set_relctx()``         ``lmdb::dbi_set_relctx()``                     [3]_
-``mdb_get()``                ``lmdb::dbi_get()``                            [3]_
-``mdb_put()``                ``lmdb::dbi_put()``                            [3]_
-``mdb_del()``                ``lmdb::dbi_del()``                            [3]_
+``mdb_drop()``               ``lmdb::dbi_drop()``                           [4]_
+``mdb_set_compare()``        ``lmdb::dbi_set_compare()``                    [4]_
+``mdb_set_dupsort()``        ``lmdb::dbi_set_dupsort()``                    [4]_
+``mdb_set_relfunc()``        ``lmdb::dbi_set_relfunc()``                    [4]_
+``mdb_set_relctx()``         ``lmdb::dbi_set_relctx()``                     [4]_
+``mdb_get()``                ``lmdb::dbi_get()``                            [4]_
+``mdb_put()``                ``lmdb::dbi_put()``                            [4]_
+``mdb_del()``                ``lmdb::dbi_del()``                            [4]_
 ``mdb_cursor_open()``        ``lmdb::cursor_open()``
 ``mdb_cursor_close()``       ``lmdb::cursor_close()``
 ``mdb_cursor_renew()``       ``lmdb::cursor_renew()``
@@ -212,7 +213,10 @@ C function                   C++ wrapper function
 
 .. [2] Only available since LMDB 0.9.11 (2014/01/15).
 
-.. [3] Note the difference in naming. (See below.)
+.. [3] Only available in LMDB HEAD, not yet in any 0.9.x release (as of 0.9.16).
+       Define the ``LMDBXX_TXN_ID`` preprocessor symbol to unhide this.
+
+.. [4] Note the difference in naming. (See below.)
 
 Caveats
 ^^^^^^^
