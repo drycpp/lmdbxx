@@ -1492,6 +1492,20 @@ public:
   }
 
   /**
+   * Retrieves a key/value pair from this database.
+   *
+   * @param txn a transaction handle
+   * @param key
+   * @param data
+   * @throws lmdb::error on failure
+   */
+  bool get(MDB_txn* const txn,
+           val& key,
+           val& data) {
+    return lmdb::dbi_get(txn, handle(), key, data);
+  }
+
+  /**
    * Retrieves a key from this database.
    *
    * @param txn a transaction handle
@@ -1546,6 +1560,22 @@ public:
       val = *v.data<const V>();
     }
     return result;
+  }
+
+  /**
+   * Stores a key/value pair into this database.
+   *
+   * @param txn a transaction handle
+   * @param key
+   * @param data
+   * @param flags
+   * @throws lmdb::error on failure
+   */
+  bool put(MDB_txn* const txn,
+           val& key,
+           val& data,
+           const unsigned int flags = default_put_flags) {
+    return lmdb::dbi_put(txn, handle(), key, data, flags);
   }
 
   /**
