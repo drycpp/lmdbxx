@@ -993,6 +993,13 @@ public:
   }
 
   /**
+   * Determines whether this value is empty.
+   */
+  bool empty() const noexcept {
+    return size() == 0;
+  }
+
+  /**
    * Returns the size of the data.
    */
   std::size_t size() const noexcept {
@@ -1000,7 +1007,7 @@ public:
   }
 
   /**
-   * Returns a pointer to the data;
+   * Returns a pointer to the data.
    */
   template<typename T>
   T* data() noexcept {
@@ -1008,7 +1015,7 @@ public:
   }
 
   /**
-   * Returns a pointer to the data;
+   * Returns a pointer to the data.
    */
   template<typename T>
   const T* data() const noexcept {
@@ -1016,14 +1023,14 @@ public:
   }
 
   /**
-   * Returns a pointer to the data;
+   * Returns a pointer to the data.
    */
   char* data() noexcept {
     return reinterpret_cast<char*>(_val.mv_data);
   }
 
   /**
-   * Returns a pointer to the data;
+   * Returns a pointer to the data.
    */
   const char* data() const noexcept {
     return reinterpret_cast<char*>(_val.mv_data);
