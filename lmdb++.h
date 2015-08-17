@@ -1678,6 +1678,18 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
+  bool del(MDB_txn* const txn,
+           const val& key) {
+    return lmdb::dbi_del(txn, handle(), key, nullptr);
+  }
+
+  /**
+   * Removes a key/value pair from this database.
+   *
+   * @param txn a transaction handle
+   * @param key
+   * @throws lmdb::error on failure
+   */
   template<typename K>
   bool del(MDB_txn* const txn,
            const K& key) {
