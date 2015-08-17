@@ -227,12 +227,18 @@ Caveats
   ``lmdb::put()``.  These differences--a handful in number--all concern
   operations on database handles.
 
+* The C++ interface takes some care to be const-correct for input-only
+  parameters, something the original C interface largely ignores.
+  Hence occasional use of ``const_cast`` in the wrapper code base.
+
 * ``lmdb::dbi_put()`` does not throw an exception if LMDB returns the
   ``MDB_KEYEXIST`` error code; it instead just returns ``false``.
+  This is intended to simplify common usage patterns.
 
 * ``lmdb::dbi_get()``, ``lmdb::dbi_del()``, and ``lmdb::cursor_get()`` do
   not throw an exception if LMDB returns the ``MDB_NOTFOUND`` error code;
   they instead just return ``false``.
+  This is intended to simplify common usage patterns.
 
 * ``lmdb::env_get_max_keysize()`` returns an unsigned integer, instead of a
   signed integer as the underlying ``mdb_env_get_maxkeysize()`` function does.

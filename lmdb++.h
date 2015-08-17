@@ -618,7 +618,7 @@ namespace lmdb {
   static inline void dbi_set_dupsort(MDB_txn* txn, MDB_dbi dbi, MDB_cmp_func* cmp);
   static inline void dbi_set_relfunc(MDB_txn* txn, MDB_dbi dbi, MDB_rel_func* rel);
   static inline void dbi_set_relctx(MDB_txn* txn, MDB_dbi dbi, void* ctx);
-  static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
+  static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, const MDB_val* key, MDB_val* data);
   static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data, unsigned int flags);
   static inline bool dbi_del(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
   // TODO: mdb_cmp()
@@ -754,9 +754,9 @@ lmdb::dbi_set_relctx(MDB_txn* const txn,
 static inline bool
 lmdb::dbi_get(MDB_txn* const txn,
               const MDB_dbi dbi,
-              MDB_val* const key,
+              const MDB_val* const key,
               MDB_val* const data) {
-  const int rc = ::mdb_get(txn, dbi, key, data);
+  const int rc = ::mdb_get(txn, dbi, const_cast<MDB_val*>(key), data);
   if (rc != MDB_SUCCESS && rc != MDB_NOTFOUND) {
     error::raise("mdb_get", rc);
   }
@@ -1520,7 +1520,7 @@ public:
    * @throws lmdb::error on failure
    */
   bool get(MDB_txn* const txn,
-           val& key,
+           const val& key,
            val& data) {
     return lmdb::dbi_get(txn, handle(), key, data);
   }
@@ -1535,7 +1535,7 @@ public:
   template<typename K>
   bool get(MDB_txn* const txn,
            const K& key) const {
-    lmdb::val k{&key, sizeof(K)};
+    const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_get(txn, handle(), k, v);
   }
@@ -1552,7 +1552,7 @@ public:
   bool get(MDB_txn* const txn,
            const K& key,
            V& val) const {
-    lmdb::val k{&key, sizeof(K)};
+    const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     const bool result = lmdb::dbi_get(txn, handle(), k, v);
     if (result) {
@@ -1573,7 +1573,7 @@ public:
   bool get(MDB_txn* const txn,
            const char* const key,
            V& val) const {
-    lmdb::val k{key, std::strlen(key)};
+    const lmdb::val k{key, std::strlen(key)};
     lmdb::val v{};
     const bool result = lmdb::dbi_get(txn, handle(), k, v);
     if (result) {
