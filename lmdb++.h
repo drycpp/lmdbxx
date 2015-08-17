@@ -620,7 +620,7 @@ namespace lmdb {
   static inline void dbi_set_relctx(MDB_txn* txn, MDB_dbi dbi, void* ctx);
   static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, const MDB_val* key, MDB_val* data);
   static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data, unsigned int flags);
-  static inline bool dbi_del(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data);
+  static inline bool dbi_del(MDB_txn* txn, MDB_dbi dbi, const MDB_val* key, const MDB_val* data);
   // TODO: mdb_cmp()
   // TODO: mdb_dcmp()
 }
@@ -789,9 +789,9 @@ lmdb::dbi_put(MDB_txn* const txn,
 static inline bool
 lmdb::dbi_del(MDB_txn* const txn,
               const MDB_dbi dbi,
-              MDB_val* const key,
-              MDB_val* const data = nullptr) {
-  const int rc = ::mdb_del(txn, dbi, key, data);
+              const MDB_val* const key,
+              const MDB_val* const data = nullptr) {
+  const int rc = ::mdb_del(txn, dbi, const_cast<MDB_val*>(key), const_cast<MDB_val*>(data));
   if (rc != MDB_SUCCESS && rc != MDB_NOTFOUND) {
     error::raise("mdb_del", rc);
   }
@@ -1680,7 +1680,7 @@ public:
    */
   bool del(MDB_txn* const txn,
            const val& key) {
-    return lmdb::dbi_del(txn, handle(), key, nullptr);
+    return lmdb::dbi_del(txn, handle(), key);
   }
 
   /**
@@ -1693,8 +1693,8 @@ public:
   template<typename K>
   bool del(MDB_txn* const txn,
            const K& key) {
-    lmdb::val k{&key, sizeof(K)};
-    return lmdb::dbi_del(txn, handle(), k, nullptr);
+    const lmdb::val k{&key, sizeof(K)};
+    return lmdb::dbi_del(txn, handle(), k);
   }
 };
 
