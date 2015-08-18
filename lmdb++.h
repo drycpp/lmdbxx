@@ -619,7 +619,7 @@ namespace lmdb {
   static inline void dbi_set_relfunc(MDB_txn* txn, MDB_dbi dbi, MDB_rel_func* rel);
   static inline void dbi_set_relctx(MDB_txn* txn, MDB_dbi dbi, void* ctx);
   static inline bool dbi_get(MDB_txn* txn, MDB_dbi dbi, const MDB_val* key, MDB_val* data);
-  static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, MDB_val* key, MDB_val* data, unsigned int flags);
+  static inline bool dbi_put(MDB_txn* txn, MDB_dbi dbi, const MDB_val* key, MDB_val* data, unsigned int flags);
   static inline bool dbi_del(MDB_txn* txn, MDB_dbi dbi, const MDB_val* key, const MDB_val* data);
   // TODO: mdb_cmp()
   // TODO: mdb_dcmp()
@@ -771,10 +771,10 @@ lmdb::dbi_get(MDB_txn* const txn,
 static inline bool
 lmdb::dbi_put(MDB_txn* const txn,
               const MDB_dbi dbi,
-              MDB_val* const key,
+              const MDB_val* const key,
               MDB_val* const data,
               const unsigned int flags = 0) {
-  const int rc = ::mdb_put(txn, dbi, key, data, flags);
+  const int rc = ::mdb_put(txn, dbi, const_cast<MDB_val*>(key), data, flags);
   if (rc != MDB_SUCCESS && rc != MDB_KEYEXIST) {
     error::raise("mdb_put", rc);
   }
@@ -1592,7 +1592,7 @@ public:
    * @throws lmdb::error on failure
    */
   bool put(MDB_txn* const txn,
-           val& key,
+           const val& key,
            val& data,
            const unsigned int flags = default_put_flags) {
     return lmdb::dbi_put(txn, handle(), key, data, flags);
@@ -1610,7 +1610,7 @@ public:
   bool put(MDB_txn* const txn,
            const K& key,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{&key, sizeof(K)};
+    const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
@@ -1629,7 +1629,7 @@ public:
            const K& key,
            const V& val,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{&key, sizeof(K)};
+    const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
@@ -1648,7 +1648,7 @@ public:
            const char* const key,
            const V& val,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{key, std::strlen(key)};
+    const lmdb::val k{key, std::strlen(key)};
     lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
@@ -1666,7 +1666,7 @@ public:
            const char* const key,
            const char* const val,
            const unsigned int flags = default_put_flags) {
-    lmdb::val k{key, std::strlen(key)};
+    const lmdb::val k{key, std::strlen(key)};
     lmdb::val v{val, std::strlen(val)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
   }
