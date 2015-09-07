@@ -15,7 +15,9 @@
 #endif
 
 #if __cplusplus < 201103L
+#if !defined(_MSC_VER) || _MSC_VER < 1900
 #error "<lmdb++.h> requires a C++11 compiler (CXXFLAGS='-std=c++11')"
+#endif // _MSC_VER check
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
