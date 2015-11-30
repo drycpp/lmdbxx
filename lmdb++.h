@@ -15,7 +15,9 @@
 #endif
 
 #if __cplusplus < 201103L
+#if !defined(_MSC_VER) || _MSC_VER < 1900
 #error "<lmdb++.h> requires a C++11 compiler (CXXFLAGS='-std=c++11')"
+#endif // _MSC_VER check
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1062,7 +1064,7 @@ public:
   }
 };
 
-#ifndef __COVERITY__
+#if !(defined(__COVERITY__) || defined(_MSC_VER))
 static_assert(std::is_pod<lmdb::val>::value, "lmdb::val must be a POD type");
 static_assert(sizeof(lmdb::val) == sizeof(MDB_val), "sizeof(lmdb::val) != sizeof(MDB_val)");
 #endif
