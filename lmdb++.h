@@ -1894,6 +1894,16 @@ public:
   }
 
   /**
+   * Removes current key/value pair from this database.
+   *
+   * @param flags Allows MDB_NODUPDATA if the database was opened with MDB_DUPSORT
+   * @throws lmdb::error on failure
+   */
+  void del(const unsigned int flags = 0) {
+    lmdb::cursor_del(handle(), flags);
+  }
+
+  /**
    * Positions this cursor at the given key.
    *
    * @param key
