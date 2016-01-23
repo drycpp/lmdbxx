@@ -1534,6 +1534,19 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
+  bool get(MDB_txn* const txn,
+           const val& key) const {
+    lmdb::val v{};
+    return lmdb::dbi_get(txn, handle(), key, v);
+  }
+
+  /**
+   * Retrieves a key from this database.
+   *
+   * @param txn a transaction handle
+   * @param key
+   * @throws lmdb::error on failure
+   */
   template<typename K>
   bool get(MDB_txn* const txn,
            const K& key) const {
