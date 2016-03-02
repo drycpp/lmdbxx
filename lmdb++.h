@@ -1534,6 +1534,19 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
+  bool get(MDB_txn* const txn,
+           const val& key) const {
+    lmdb::val v{};
+    return lmdb::dbi_get(txn, handle(), key, v);
+  }
+
+  /**
+   * Retrieves a key from this database.
+   *
+   * @param txn a transaction handle
+   * @param key
+   * @throws lmdb::error on failure
+   */
   template<typename K>
   bool get(MDB_txn* const txn,
            const K& key) const {
@@ -1891,6 +1904,16 @@ public:
       val.assign(v.data(), v.size());
     }
     return found;
+  }
+
+  /**
+   * Removes current key/value pair from this database.
+   *
+   * @param flags Allows MDB_NODUPDATA if the database was opened with MDB_DUPSORT
+   * @throws lmdb::error on failure
+   */
+  void del(const unsigned int flags = 0) {
+    lmdb::cursor_del(handle(), flags);
   }
 
   /**
