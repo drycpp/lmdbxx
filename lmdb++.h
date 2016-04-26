@@ -20,6 +20,16 @@
 #endif // _MSC_VER check
 #endif
 
+#if HAS_CXX11_THREAD_LOCAL
+    #define ATTRIBUTE_TLS thread_local
+#elif defined (__GNUC__)
+    #define ATTRIBUTE_TLS __thread
+#elif defined (_MSC_VER)
+    #define ATTRIBUTE_TLS __declspec(thread)
+#else // !C++11 && !__GNUC__ && !_MSC_VER
+    #error "Define a thread local storage qualifier for your compiler/platform!"
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <lmdb.h>      /* for MDB_*, mdb_*() */
@@ -96,7 +106,7 @@ public:
    * Returns the underlying LMDB error code.
    */
   virtual const char* what() const noexcept {
-    static thread_local char buffer[1024];
+    static ATTRIBUTE_TLS char buffer[1024];
     std::snprintf(buffer, sizeof(buffer),
       "%s: %s", origin(), ::mdb_strerror(code()));
     return buffer;
