@@ -8,7 +8,8 @@ int main() {
   /* Create and open the LMDB environment: */
   auto env = lmdb::env::create();
   env.set_mapsize(1UL * 1024UL * 1024UL * 1024UL); /* 1 GiB */
-  env.open("./example.mdb", 0, 0664);
+  //env.open("./example.mdb", 0, 0664);
+  env.open( "./env" );
 
   /* Insert some key/value pairs in a write transaction: */
   auto wtxn = lmdb::txn::begin(env);

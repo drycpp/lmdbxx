@@ -36,6 +36,7 @@ check: check.o
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD) && ./$@
 
 example: example.o
+	$(MKDIR) env
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDADD) && ./$@
 
 %.o: %.cc lmdb++.h
@@ -51,6 +52,7 @@ uninstall:
 	$(RM) $(DESTDIR)$(includedir)/lmdb++.h
 
 clean:
+	$(RM) env/*
 	$(RM) README.html README.md check example $(PACKAGE_TARSTRING).tar.* *.o *~
 
 README: README.html README.md
