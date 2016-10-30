@@ -1194,6 +1194,11 @@ public:
   env& open(const char* const path,
             const unsigned int flags = default_flags,
             const mode mode = default_mode) {
+#if defined(_MSC_VER)
+#if defined(_WIN32)
+	CreateDirectory(path, NULL);
+#endif
+#endif
     lmdb::env_open(handle(), path, flags, mode);
     return *this;
   }
