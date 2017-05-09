@@ -1523,7 +1523,7 @@ public:
    */
   bool get(MDB_txn* const txn,
            const val& key,
-           val& data) {
+           val& data) const {
     return lmdb::dbi_get(txn, handle(), key, data);
   }
 
