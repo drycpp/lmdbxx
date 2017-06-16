@@ -1534,13 +1534,13 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
-  template<typename K>
+/*  template<typename K>
   bool get(MDB_txn* const txn,
            const K& key) const {
     const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_get(txn, handle(), k, v);
-  }
+  }*/
 
   /**
    * Retrieves a key/value pair from this database.
@@ -1550,7 +1550,7 @@ public:
    * @param val
    * @throws lmdb::error on failure
    */
-  template<typename K, typename V>
+/*  template<typename K, typename V>
   bool get(MDB_txn* const txn,
            const K& key,
            V& val) const {
@@ -1561,7 +1561,7 @@ public:
       val = *v.data<const V>();
     }
     return result;
-  }
+  }*/
 
   /**
    * Retrieves a key/value pair from this database.
@@ -1571,7 +1571,7 @@ public:
    * @param val
    * @throws lmdb::error on failure
    */
-  template<typename V>
+/*  template<typename V>
   bool get(MDB_txn* const txn,
            const char* const key,
            V& val) const {
@@ -1582,7 +1582,7 @@ public:
       val = *v.data<const V>();
     }
     return result;
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1616,14 +1616,14 @@ public:
    * @param flags
    * @throws lmdb::error on failure
    */
-  template<typename K>
+/*  template<typename K>
   bool put(MDB_txn* const txn,
            const K& key,
            const unsigned int flags = default_put_flags) {
     const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1634,7 +1634,7 @@ public:
    * @param flags
    * @throws lmdb::error on failure
    */
-  template<typename K, typename V>
+/*  template<typename K, typename V>
   bool put(MDB_txn* const txn,
            const K& key,
            const V& val,
@@ -1642,7 +1642,7 @@ public:
     const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1653,7 +1653,7 @@ public:
    * @param flags
    * @throws lmdb::error on failure
    */
-  template<typename V>
+/*  template<typename V>
   bool put(MDB_txn* const txn,
            const char* const key,
            const V& val,
@@ -1661,7 +1661,7 @@ public:
     const lmdb::val k{key, std::strlen(key)};
     lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1700,12 +1700,12 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
-  template<typename K>
+/*  template<typename K>
   bool del(MDB_txn* const txn,
            const K& key) {
     const lmdb::val k{&key, sizeof(K)};
     return lmdb::dbi_del(txn, handle(), k);
-  }
+  }*/
 };
 
 ////////////////////////////////////////////////////////////////////////////////
