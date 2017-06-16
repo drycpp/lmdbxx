@@ -1600,6 +1600,14 @@ public:
     return lmdb::dbi_put(txn, handle(), key, data, flags);
   }
 
+    bool put(MDB_txn* const txn,
+             const val& key,
+             const val& data,
+             const unsigned int flags = default_put_flags) {
+      val rwdata{data.data(), data.size()};
+      return lmdb::dbi_put(txn, handle(), key, rwdata, flags);
+    }
+
   /**
    * Stores a key into this database.
    *
