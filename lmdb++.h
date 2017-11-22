@@ -245,7 +245,7 @@ namespace lmdb {
   static inline void env_get_flags(MDB_env* env, unsigned int* flags);
   static inline void env_get_path(MDB_env* env, const char** path);
   static inline void env_get_fd(MDB_env* env, mdb_filehandle_t* fd);
-  static inline void env_set_mapsize(MDB_env* env, std::size_t size);
+  static inline void env_set_mapsize(MDB_env* env, mdb_size_t size);
   static inline void env_set_max_readers(MDB_env* env, unsigned int count);
   static inline void env_get_max_readers(MDB_env* env, unsigned int* count);
   static inline void env_set_max_dbs(MDB_env* env, MDB_dbi count);
@@ -432,7 +432,7 @@ lmdb::env_get_fd(MDB_env* const env,
  */
 static inline void
 lmdb::env_set_mapsize(MDB_env* const env,
-                      const std::size_t size) {
+                      const mdb_size_t size) {
   const int rc = ::mdb_env_set_mapsize(env, size);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_env_set_mapsize", rc);
@@ -812,7 +812,7 @@ namespace lmdb {
   static inline bool cursor_get(MDB_cursor* cursor, MDB_val* key, MDB_val* data, MDB_cursor_op op);
   static inline void cursor_put(MDB_cursor* cursor, MDB_val* key, MDB_val* data, unsigned int flags);
   static inline void cursor_del(MDB_cursor* cursor, unsigned int flags);
-  static inline void cursor_count(MDB_cursor* cursor, std::size_t& count);
+  static inline void cursor_count(MDB_cursor* cursor, mdb_size_t& count);
 }
 
 /**
@@ -916,7 +916,7 @@ lmdb::cursor_del(MDB_cursor* const cursor,
  */
 static inline void
 lmdb::cursor_count(MDB_cursor* const cursor,
-                   std::size_t& count) {
+                   mdb_size_t& count) {
   const int rc = ::mdb_cursor_count(cursor, &count);
   if (rc != MDB_SUCCESS) {
     error::raise("mdb_cursor_count", rc);
@@ -1213,7 +1213,7 @@ public:
    * @param size
    * @throws lmdb::error on failure
    */
-  env& set_mapsize(const std::size_t size) {
+  env& set_mapsize(const mdb_size_t size) {
     lmdb::env_set_mapsize(handle(), size);
     return *this;
   }
@@ -1486,7 +1486,7 @@ public:
    * @param txn a transaction handle
    * @throws lmdb::error on failure
    */
-  std::size_t size(MDB_txn* const txn) const {
+  mdb_size_t size(MDB_txn* const txn) const {
     return stat(txn).ms_entries;
   }
 
@@ -1534,13 +1534,13 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
-  template<typename K>
+/*  template<typename K>
   bool get(MDB_txn* const txn,
            const K& key) const {
     const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_get(txn, handle(), k, v);
-  }
+  }*/
 
   /**
    * Retrieves a key/value pair from this database.
@@ -1550,7 +1550,7 @@ public:
    * @param val
    * @throws lmdb::error on failure
    */
-  template<typename K, typename V>
+/*  template<typename K, typename V>
   bool get(MDB_txn* const txn,
            const K& key,
            V& val) const {
@@ -1561,7 +1561,7 @@ public:
       val = *v.data<const V>();
     }
     return result;
-  }
+  }*/
 
   /**
    * Retrieves a key/value pair from this database.
@@ -1571,7 +1571,7 @@ public:
    * @param val
    * @throws lmdb::error on failure
    */
-  template<typename V>
+/*  template<typename V>
   bool get(MDB_txn* const txn,
            const char* const key,
            V& val) const {
@@ -1582,7 +1582,7 @@ public:
       val = *v.data<const V>();
     }
     return result;
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1600,6 +1600,14 @@ public:
     return lmdb::dbi_put(txn, handle(), key, data, flags);
   }
 
+    bool put(MDB_txn* const txn,
+             const val& key,
+             const val& data,
+             const unsigned int flags = default_put_flags) {
+      val rwdata{data.data(), data.size()};
+      return lmdb::dbi_put(txn, handle(), key, rwdata, flags);
+    }
+
   /**
    * Stores a key into this database.
    *
@@ -1608,14 +1616,14 @@ public:
    * @param flags
    * @throws lmdb::error on failure
    */
-  template<typename K>
+/*  template<typename K>
   bool put(MDB_txn* const txn,
            const K& key,
            const unsigned int flags = default_put_flags) {
     const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1626,7 +1634,7 @@ public:
    * @param flags
    * @throws lmdb::error on failure
    */
-  template<typename K, typename V>
+/*  template<typename K, typename V>
   bool put(MDB_txn* const txn,
            const K& key,
            const V& val,
@@ -1634,7 +1642,7 @@ public:
     const lmdb::val k{&key, sizeof(K)};
     lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1645,7 +1653,7 @@ public:
    * @param flags
    * @throws lmdb::error on failure
    */
-  template<typename V>
+/*  template<typename V>
   bool put(MDB_txn* const txn,
            const char* const key,
            const V& val,
@@ -1653,7 +1661,7 @@ public:
     const lmdb::val k{key, std::strlen(key)};
     lmdb::val v{&val, sizeof(V)};
     return lmdb::dbi_put(txn, handle(), k, v, flags);
-  }
+  }*/
 
   /**
    * Stores a key/value pair into this database.
@@ -1692,12 +1700,12 @@ public:
    * @param key
    * @throws lmdb::error on failure
    */
-  template<typename K>
+/*  template<typename K>
   bool del(MDB_txn* const txn,
            const K& key) {
     const lmdb::val k{&key, sizeof(K)};
     return lmdb::dbi_del(txn, handle(), k);
-  }
+  }*/
 };
 
 ////////////////////////////////////////////////////////////////////////////////
